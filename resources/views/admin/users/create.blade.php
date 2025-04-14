@@ -37,8 +37,8 @@
                                     <option value="admin">Admin</option>
                                     <option value="supervisor">Supervisor</option>
                                     <option value="petugas">Petugas</option>
-                                    <option value="teknisi">Teknisi</option>
                                     <option value="pengguna">Pengguna</option>
+                                    <option value="owner">owner</option>
                                 </select>
                             </div>                                
                         </div>

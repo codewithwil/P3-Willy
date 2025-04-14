@@ -13,15 +13,19 @@ use Illuminate\{
     Support\Facades\Hash,
     Support\Facades\Validator
 };
-
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 
 class UserC extends Controller
 {
   
-    public function index(){
-
-        $users = User::all();
+    public function index()
+    {
+        if (Auth::user()->branch && Auth::user()->branch->branchName === 'Administrator') {
+            $users = User::with('branch')->get();
+        } else {
+            $users = User::where('branch_id', Auth::user()->branch_id)->get();
+        }
         return view('admin.users.index', compact('users'));
     }
 

@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\Attendance\Presences\Presences;
+use App\Models\Resources\Branch\Branch;
 use App\Models\Resources\ManagementShift\EmployeeShift;
 use App\Models\Transactions\ComeCommodity\ComeCommodity;
 use App\Models\Transactions\Loaning\Loaning;
@@ -62,11 +63,5 @@ use HasFactory, Notifiable, HasRoles;
         ];
     }
 
-    public function loaning(){return $this->hasMany(Loaning::class, 'user_id', 'id');}
-    public function service(){return $this->hasMany(Service::class, 'user_id', 'id');}
-    public function stockTransac(){return $this->hasMany(StockTransac::class, 'user_id', 'id');}
-    public function presences(){return $this->hasOne(Presences::class, 'user_id', 'id');}
-    public function employeeShift(){return $this->hasMany(EmployeeShift::class, 'user_id', 'id');}
-    public function outCommod(){return $this->hasMany(OutCommodity::class, 'user_id', 'id');}
-    public function comeCommod(){return $this->hasMany(ComeCommodity::class, 'user_id', 'id');}
+    public function branch(){return $this->belongsTo(Branch::class, 'branch_id', 'branchId');}
 }

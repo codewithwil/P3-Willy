@@ -17,12 +17,19 @@ return new class extends Migration
             Schema::create('companies', function (Blueprint $table){
                 $table->engine = "InnoDB";
                 $table->id('companyId');   
+                $table->unsignedBigInteger('branch_id')->nullable(true);   
                 $table->string('image')->nullable(true);   
                 $table->string('name', 50);   
                 $table->string('email')->unique();   
                 $table->string('phone', 16);   
                 $table->text('address');   
                 $table->timestamps();
+
+                $table->foreign('branch_id')
+                ->references('branchId')
+                ->on('branches')
+                ->onUpdate("cascade")
+                ->onDelete("restrict");
             });
         }
     }

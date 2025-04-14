@@ -39,20 +39,13 @@
   <body class="login-page bg-body-secondary">
     <div class="login-box">
       <div class="login-logo text-center">
-        <?php
-          use App\Models\Resources\Company\Company;
-    
-          $company = Company::first();
-        ?>
-        @if($company && $company->image)
-        <img
-            src="{{ asset($company->image) }}"
-            alt="{{ $company->name ?? 'Company Logo' }}"
+        {{-- <img
+            src=""
+            alt="laundry"
             class="shadow img-fluid rounded-circle mb-3"
             style="width: 100px; height: 100px; object-fit: cover;"
-        />
-        <a href="../index2.html" class="d-block"><b>{{ $company->name }}</b></a>
-        @endif
+        /> --}}
+        <a href="../index2.html" class="d-block"><b>Laundry</b></a>
     </div>
     
       <div class="card">

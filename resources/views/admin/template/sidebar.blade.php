@@ -3,8 +3,9 @@
       <a href="./index.html" class="brand-link">
           <?php
           use App\Models\Resources\Company\Company;
-
-          $company = Company::first();
+          use Illuminate\Support\Facades\Auth;
+          
+          $company = Company::where('branch_id', Auth::user()->branch_id)->first();
           ?>
           @if($company && $company->image)
           <img
@@ -50,100 +51,14 @@
               <li class="nav-item">
                 <a href="{{ url('transactions/commodities') }}" class="nav-link">
                   <i class="nav-icon bi bi-circle"></i>
-                  <p>Barang</p>
+                  <p>Member</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="{{ url('transactions/loanings') }}" class="nav-link">
                   <i class="nav-icon bi bi-circle"></i>
-                  <p>Peminjaman</p>
+                  <p>Loundry</p>
                 </a>
-              </li>
-              @if(auth()->user()->hasRole(['admin', 'supervisor', 'petugas']))      
-              <li class="nav-item">
-                <a href="{{ url('transactions/services') }}" class="nav-link">
-                  <i class="nav-icon bi bi-circle"></i>
-                  <p>Servis Barang</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ url('transactions/comeCommod') }}" class="nav-link">
-                  <i class="nav-icon bi bi-circle"></i>
-                  <p>Pembelian Barang</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ url('transactions/serviceV') }}" class="nav-link">
-                  <i class="nav-icon bi bi-circle"></i>
-                  <p>Servis Kendaraan</p>
-                </a>
-              </li>
-              @endif
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-person-x"></i>
-                  <p>
-                    Pengajuan
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  @if(auth()->user()->hasRole(['admin', 'supervisor']))   
-                  <li class="nav-item">
-                    <a href="{{ url('transactions/loaningsApps') }}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Pengajuan Peminjaman</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ url('transactions/serviceApps') }}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Pengajuan Servis</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ url('transactions/comeCommodApps') }}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Pengajuan Pembelian Barang</p>
-                    </a>
-                  </li>
-                  @endif
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-header">Resources</li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon bi bi-layers"></i>
-              <p>
-                Management Servis
-                <i class="nav-arrow bi bi-chevron-right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-building-gear"></i>
-                  <p>
-                    Manajemen Shift
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="{{ url('resources/shift') }}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Shift</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ url('resources/empShift') }}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Shift Pegawai</p>
-                    </a>
-                  </li>
-                </ul>
               </li>
             </ul>
           </li>
@@ -153,64 +68,30 @@
             <a href="#" class="nav-link">
               <i class="nav-icon bi bi-layers"></i>
               <p>
-                setting
+                Setting
                 <i class="nav-arrow bi bi-chevron-right"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ url('configuration/category') }}" class="nav-link">
+                <a href="{{ url('setting/branch') }}" class="nav-link">
                   <i class="nav-icon bi bi-circle"></i>
-                  <p>Kategori Barang</p>
+                  <p>Cabang</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ url('resources/brandMotor') }}" class="nav-link">
+                <a href="{{ url('setting/branch') }}" class="nav-link">
                   <i class="nav-icon bi bi-circle"></i>
-                  <p>Merk Motor</p>
+                  <p>Promo</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="{{ url('configuration/typeVehicle') }}" class="nav-link">
                   <i class="nav-icon bi bi-circle"></i>
-                  <p>Tipe Kendaraan</p>
+                  <p>Layanan</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{ url('configuration/unit') }}" class="nav-link">
-                  <i class="nav-icon bi bi-circle"></i>
-                  <p>Satuan</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="{{ url('configuration/supplier') }}" class="nav-link">
-                  <i class="nav-icon bi bi-circle"></i>
-                  <p>Supplier</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon bi bi-building-gear"></i>
-                  <p>
-                    Manajemen Ruangan
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="{{ url('configuration/building') }}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Gudang</p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="{{ url('configuration/rooms') }}" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Ruangan</p>
-                    </a>
-                  </li>
-                </ul>
-              </li>
+
             </ul>
           </li>
          
@@ -223,14 +104,6 @@
                 <i class="nav-arrow bi bi-chevron-right"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ url('report/stockReport') }}" class="nav-link">
-                  <i class="nav-icon bi bi-circle"></i>
-                  <p>Riwayat Transaksi stok</p>
-                </a>
-              </li>
-            </ul>
           </li>
           @endif
           <li class="nav-header">Konfigurasi aplikasi</li>
@@ -256,28 +129,6 @@
                 <a href="{{ url('people/users') }}" class="nav-link">
                   <i class="nav-icon bi bi-circle"></i>
                   <p>Pengguna/User</p>
-                </a>
-              </li>
-              @endif
-              <li class="nav-item">
-                <a href="{{ url('attendance/presences/attendance') }}" class="nav-link">
-                  <i class="nav-icon bi bi-circle"></i>
-                  <p>Absensi</p>
-                </a>
-              </li>
-              @if(auth()->user()->hasRole(['admin', 'supervisor']))
-                <li class="nav-item">
-                <a href="{{ url('attendance/presences') }}" class="nav-link">
-                  <i class="nav-icon bi bi-circle"></i>
-                  <p>Data Absensi</p>
-                </a>
-              </li> 
-              @endif
-              @if(auth()->user()->hasRole(['admin', 'supervisor']))
-              <li class="nav-item">
-                <a href="{{ url('attendance/locations') }}" class="nav-link">
-                  <i class="nav-icon bi bi-circle"></i>
-                  <p>Lokasi Absen</p>
                 </a>
               </li>
               @endif

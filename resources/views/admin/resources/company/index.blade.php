@@ -50,7 +50,8 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="companyPhoto" class="form-label">Foto Perusahaan</label>
-                                    <input type="file" name="image" class="mt-1 border border-gray-300 rounded w-full" accept="image/*" @if(!$company) required @endif>
+                                    <input type="file" name="image" class="mt-1 border border-gray-300 rounded w-full" accept="image/*" {{ $company ?? '' ? '' : 'required' }}>
+
                                     @error('image')
                                         <span class="text-red-600 text-sm">{{ $message }}</span>
                                     @enderror

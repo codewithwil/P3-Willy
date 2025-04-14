@@ -7,7 +7,7 @@ use Database\{
     Seeders\assets\RolesSeeder,
 
 };
-
+use Database\Seeders\assets\BranchSeeder;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\{
     Database\Seeder,
@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         DB::beginTransaction();
         try {
             $this->call([
+                BranchSeeder::class,  
                 RolesSeeder::class,  
                 UserSeeder::class,  
             ]);

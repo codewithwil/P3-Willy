@@ -22,7 +22,6 @@
                 @csrf
              
                 <div class="card mb-4" style="border-left: 5px solid #007bff;">
-                    {{-- acount section   --}}
                     <div class="card-header bg-primary text-white">
                         <h5 class="mb-0">Akun User</h5>
                     </div>

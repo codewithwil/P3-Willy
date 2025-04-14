@@ -10,9 +10,13 @@
         </li>
         <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
         <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
+        <li class="nav-item d-none d-md-block">
+          <span class="nav-link">
+              <strong>Cabang {{ Auth::user()->branch->branchName }}</strong>
+          </span>
+      </li>
+      
       </ul>
-      <!--end::Start Navbar Links-->
-      <!--begin::End Navbar Links-->
       <ul class="navbar-nav ms-auto">
         <!--begin::Navbar Search-->
         <li class="nav-item">
@@ -154,7 +158,11 @@
               class="user-image rounded-circle shadow"
               alt="User Image"
             />
-            <span class="d-none d-md-inline">{{ Auth::user()->name }} | {{ Auth::user()->getRoleNames()->first() }}</span>
+            <span class="d-none d-md-inline">
+              Hallo, {{ Auth::user()->name }} | 
+              {{ Auth::user()->getRoleNames()->first() }}
+          </span>
+          
           </a>
           <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
             <!--begin::User Image-->
