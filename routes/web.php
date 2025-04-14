@@ -2,11 +2,13 @@
 
 use App\Http\Controllers\API\Auth\AuthC;
 use App\Http\Controllers\API\Dashboard\DashboardC;
+use App\Http\Controllers\API\Front\FrontC;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
 
 Route::middleware(['guest'])->group(function(){
     Route::get('/login', [AuthC::class, 'index'])->name('login');
@@ -18,6 +20,7 @@ Route::middleware(['guest'])->group(function(){
 
 Route::middleware(['auth'])->group(function(){
     Route::get('/dashboard', [DashboardC::class, 'index'])->name('dashboard');
+    Route::get('/order', [FrontC::class, 'index'])->name('order');
     Route::get('/logout', [AuthC::class, 'logout'])->name('logout');
 
     //nested route

@@ -6,6 +6,7 @@ use App\{
     Http\Controllers\Controller,
     Models\User,
 };
+use App\Models\Resources\Branch\Branch;
 use App\Models\Resources\Company\Company;
 use Illuminate\{
     Http\Request,
@@ -21,17 +22,19 @@ class UserC extends Controller
   
     public function index()
     {
+        $branch = Branch::all();
         if (Auth::user()->branch && Auth::user()->branch->branchName === 'Administrator') {
             $users = User::with('branch')->get();
         } else {
             $users = User::where('branch_id', Auth::user()->branch_id)->get();
         }
-        return view('admin.users.index', compact('users'));
+        return view('admin.users.index', compact('users', 'branch'));
     }
 
     public function create(){
+        $branch = Branch::all();
         $roles    = Role::all(); 
-        return view('admin.users.create', compact('roles'));
+        return view('admin.users.create', compact('roles', 'branch'));
     }
 
     public function invoice(){
@@ -55,12 +58,13 @@ class UserC extends Controller
     
         try {
             $validator = Validator::make($request->all(), [
-                'email'    => 'required|email|unique:users,email',
-                'password' => 'required|min:6',
-                'name'     => 'required|string|max:255',
-                'phone'    => 'required|numeric',
-                'address'  => 'required|string|max:255',
-                'role'     => 'required|in:admin,supervisor,petugas,teknisi,pengguna', 
+                'branch_id' => 'required|exists:branches,branchName',
+                'email'     => 'required|email|unique:users,email',
+                'password'  => 'required|min:6',
+                'name'      => 'required|string|max:255',
+                'phone'     => 'required|numeric',
+                'address'   => 'required|string|max:255',
+                'role'      => 'required|in:admin,supervisor,petugas,owner,pengguna', 
             ]);
     
             if ($validator->fails()) {
@@ -69,11 +73,12 @@ class UserC extends Controller
     
             $hashedPassword = Hash::make($request->input('password'));
             $user = User::create([
-                'name'     => $request->input('name'),
-                'email'    => $request->input('email'),
-                'password' => $hashedPassword,
-                'phone'    => $request->input('phone'),
-                'address'  => $request->input('address'),
+                'branch_id' => $request->input('branch_id'),
+                'name'      => $request->input('name'),
+                'email'     => $request->input('email'),
+                'password'  => $hashedPassword,
+                'phone'     => $request->input('phone'),
+                'address'   => $request->input('address'),
             ]);
 
             $role = $request->input('role');
@@ -92,6 +97,7 @@ class UserC extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
+            'branch_id' => 'required|exists:branches,branchName',
             'email'    => 'nullable|email|unique:users,email,' . $id,
             'name'     => 'nullable|string|max:255',
             'phone'    => 'nullable|digits_between:10,15',
@@ -102,6 +108,7 @@ class UserC extends Controller
         DB::beginTransaction(); 
         try {
             $user = User::findOrFail($id);
+            $user->branch_id   = $request->branch_id;
             $user->email   = $request->email;
             $user->name    = $request->name;
             $user->phone   = $request->phone;
@@ -129,8 +136,7 @@ class UserC extends Controller
         try {
             $user = User::findOrFail($id);
     
-            // Detach the user's roles before deletion
-            $user->roles()->detach(); // If using a many-to-many relationship
+            $user->roles()->detach(); 
     
             // Delete the user
             $user->delete();

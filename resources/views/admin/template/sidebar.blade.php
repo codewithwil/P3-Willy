@@ -3,9 +3,8 @@
       <a href="./index.html" class="brand-link">
           <?php
           use App\Models\Resources\Company\Company;
-          use Illuminate\Support\Facades\Auth;
-          
-          $company = Company::where('branch_id', Auth::user()->branch_id)->first();
+
+          $company = Company::first();
           ?>
           @if($company && $company->image)
           <img

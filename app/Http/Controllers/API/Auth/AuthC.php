@@ -36,14 +36,15 @@ class AuthC extends Controller
     
         if ($result['success']) {
             session()->flash('success', $result['message']);
-            return redirect()->route('login');
+            return redirect('/login');
         }
     
         session()->flash('error', $result['message']);
         return redirect()->back()->withInput();
     }
     
-    public function login(Request $req) {
+    public function login(Request $req)
+    {
         $loginDto = LoginDto::fromRequest($req);
         $result = $this->authService->login($loginDto);
     
@@ -52,11 +53,18 @@ class AuthC extends Controller
             'password' => $loginDto->password,
         ])) {
             $req->session()->regenerate();
+    
+            $user = Auth::user();
+            if ($user->hasRole('pengguna')) {
+                return redirect()->route('order')->with('success', $result['message']);
+            }
+    
             return redirect()->route('dashboard')->with('success', $result['message']);
         }
     
         return redirect()->route('login')->withErrors(['login' => $result['message']]);
     }
+    
 
     public function logout(Request $req){
         $this->authService->logout();

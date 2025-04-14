@@ -21,7 +21,7 @@ class AuthRepository extends BaseRepositories implements AuthRepositoryContract{
         $data['password'] = Hash::make($data['password']);
         unset($data['password_confirmation']);
         $user = $this->create($data);
-        $user->assignRole('user');
+        $user->assignRole('pengguna');
         return $user;
     }
 

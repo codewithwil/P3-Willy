@@ -8,7 +8,6 @@ use App\{
 };
 use App\Models\Resources\Company\Company;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,19 +16,10 @@ use function PHPUnit\Framework\isArray;
 class CompanyC extends Controller
 {
 
-    public function index()
-    {
-        if (Auth::user()->branch && Auth::user()->branch->branchName === 'Administrator') {
-            // Jika iya, tampilkan semua perusahaan
-            $companies = Company::with('branch')->get();
-        } else {
-            // Jika tidak, hanya tampilkan perusahaan berdasarkan branch yang dimiliki 
-            $companies = Company::where('branch_id', Auth::user()->branch_id)->get();
-        }
-    
-        return view('admin.resources.company.index', compact('companies'));
+    public function index(){
+        $company = Company::first();
+        return view('admin.resources.company.index', compact('company'));
     }
-    
 
 
 
@@ -42,13 +32,11 @@ class CompanyC extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'address' => 'required|string|max:500',
         ]);
-        
-        $validatedData['branch_id'] = Auth::user()->branch_id;
 
         DB::beginTransaction();
     
         try {
-            $company = Company::where('branch_id', Auth::user()->branch_id)->first();
+            $company = Company::first();
             if (!$company) {
                 $company = new Company($validatedData);
                 if ($request->hasFile('image')) {

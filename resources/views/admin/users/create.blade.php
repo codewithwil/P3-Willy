@@ -44,6 +44,19 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
+                                <label for="branch" class="form-label">Cabang</label>
+                                <select name="branch_id" class="form-control" id="branch">
+                                    <option value="">--- Pilih  ---</option>
+                                    @foreach ($branch as $b)
+                                        @if ($b->branchName === 'Administrator' && Auth::user()->getRoleNames()->first() === 'admin')
+                                            <option value="{{ $b->branchId }}">{{ $b->branchName }}</option>
+                                        @elseif ($b->branchName !== 'Administrator')
+                                            <option value="{{ $b->branchId }}">{{ $b->branchName }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>                                
+                            </div>   
+                            <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
                                 <input type="password" name="password" class="form-control" id="password"  placeholder="Masukkan password">
                             </div>
