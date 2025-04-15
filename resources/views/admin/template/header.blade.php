@@ -161,7 +161,10 @@
               alt="User Image"
             />
             <span class="d-none d-md-inline">
-              Hallo, {{ Auth::user()->name }} | 
+              Hallo, {{ optional(Auth::user()->admin)->name }}
+               {{ optional(Auth::user()->supervisor)->name }}
+              {{ optional(Auth::user()->employee)->name }}
+               {{ optional(Auth::user()->customer)->name }} | 
               {{ Auth::user()->getRoleNames()->first() }}
           </span>
           
@@ -175,7 +178,8 @@
                 alt="User Image"
               />
               <p>
-                {{ Auth::user()->name }} | {{ Auth::user()->getRoleNames()->first() }}
+                {{ Auth::user()->realName() }} | {{ Auth::user()->getRoleNames()->first() }}
+
                 <small>Member since Nov. 2023</small>
               </p>
             </li>
