@@ -154,6 +154,12 @@
                   <p>Manajemen Owner</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{ url('people/customer') }}" class="nav-link">
+                  <i class="nav-icon bi bi-circle"></i>
+                  <p>Manajemen Pengguna/Pelanggan</p>
+                </a>
+              </li>
               @endif
             </ul>
           </li>

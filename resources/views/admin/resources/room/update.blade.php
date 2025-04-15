@@ -43,7 +43,7 @@
                                                 {{ $b->buildingName }}
                                             </option>
                                         @endforeach
-                                    </select>
+                                    </select> 
                                 </div>
                             </div>
                         </div>
