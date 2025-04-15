@@ -5,11 +5,11 @@
 <div class="app-content-header">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-6"><h3 class="mb-0">Tambah Data User</h3></div>
+            <div class="col-sm-6"><h3 class="mb-0">Tambah Data Admin</h3></div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                     <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">User</li>
+                    <li class="breadcrumb-item active" aria-current="page">Admin</li>
                 </ol>
             </div>
         </div>
@@ -21,7 +21,7 @@
             <div class="card mb-4" style="border-left: 5px solid #007bff;">
                 {{-- acount section   --}}
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Akun User</h5>
+                    <h5 class="mb-0">Akun Admin</h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -34,7 +34,7 @@
                                 <label for="role" class="form-label">Role</label>
                                 <select name="role" id="role" class="form-control">
                                     <option value="">Pilih Role</option>
-                                    <option value="admin">Admin</option>
+                                    <option value="admin" selected>Admin</option>
                                     <option value="supervisor">Supervisor</option>
                                     <option value="petugas">Petugas</option>
                                     <option value="pengguna">Pengguna</option>
@@ -42,20 +42,12 @@
                                 </select>
                             </div>                                
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6">  
                             <div class="mb-3">
-                                <label for="branch" class="form-label">Cabang</label>
-                                <select name="branch_id" class="form-control" id="branch_id">
-                                    <option value="">--- Pilih  ---</option>
-                                    @foreach ($branch as $b)
-                                        @if ($b->branchName === 'Administrator' && Auth::user()->getRoleNames()->first() === 'admin')
-                                            <option value="{{ $b->branchId }}">{{ $b->branchName }}</option>
-                                        @elseif ($b->branchName !== 'Administrator')
-                                            <option value="{{ $b->branchId }}">{{ $b->branchName }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>                                
-                            </div>   
+                                <label for="foto" class="form-label">Foto</label>
+                                <input type="file" name="foto" class="form-control" id="foto">
+                            </div>
+                            
                             <div class="mb-3">
                                 <label for="password" class="form-label">Password</label>
                                 <input type="password" name="password" class="form-control" id="password"  placeholder="Masukkan password">
@@ -63,7 +55,7 @@
                         </div>
                     </div>                
                 </div>
-                    <!-- Data User Section -->
+                    <!-- Data Admin Section -->
                 <div class="card-header bg-primary text-white">
                     <h5 class="mb-0">Data User</h5>
                 </div>
@@ -75,15 +67,11 @@
                                 <label for="name" class="form-label">Nama</label>
                                 <input type="text" name="name" class="form-control" id="name"  placeholder="Masukkan nama user">
                             </div>
-                            <div class="mb-3">
-                                <label for="phone" class="form-label">Nomor Telepon</label>
-                                <input type="number"  name="phone" class="form-control" id="phone" placeholder="Masukkan nomor telepon">
-                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="address" class="form-label">Alamat</label>
-                                <textarea class="form-control" name="address" id="address" placeholder="Masukkan alamat perusahaan" cols="30" rows="4"></textarea>
+                                <label for="telepon" class="form-label">Nomor Telepon</label>
+                                <input type="number"  name="telepon" class="form-control" id="telepon" placeholder="Masukkan nomor telepon">
                             </div>
                         </div>
                     </div>
@@ -102,16 +90,16 @@
                                     <thead class="bg-dark text-white">
                                         <tr>
                                             <th style="width: 5%;">No</th>
+                                            <th style="width: 15%;">Foto</th>
+                                            <th style="width: 15%;">Nama</th>
                                             <th style="width: 15%;">Email</th>
                                             <th style="width: 15%;">Password</th>
-                                            <th style="width: 15%;">Role</th>
-                                            <th style="width: 15%;">Cabang</th>
-                                            <th style="width: 15%;">Nama</th>
-                                            <th style="width: 15%;">Nomor</th>
-                                            <th style="width: 15%;">Alamat</th>
+                                            <th style="width: 10%;">Role</th>
+                                            <th style="width: 10%;">Nomor Telepon</th>
                                             <th style="width: 5%;">Aksi</th>
                                         </tr>
                                     </thead>
+                                    
                                     <tbody>
                                         <!-- Data user sementara -->
                                     </tbody>
@@ -137,35 +125,47 @@
             let role     = document.getElementById('role').value.trim();
             let password = document.getElementById('password').value.trim();
             let name     = document.getElementById('name').value.trim();
-            let phone    = document.getElementById('phone').value.trim();
-            let address  = document.getElementById('address').value.trim();
-            let branch_id   = document.getElementById('branch_id').value.trim();
+            let telepon  = document.getElementById('telepon').value.trim();
+            let foto     = document.getElementById('foto').files[0]; 
 
-            if (email === '' || role === '' || password === '' || name === ''|| phone === '' ||address=== '' || branch_id==='') {
-                alert("Semua data wajib diisi tidak boleh kosong!");
+            if (email === '' || role === '' || password === '' || name === '' || telepon === '' || !foto) {
+                alert("Semua data wajib diisi, termasuk foto!");
                 return;
             }
 
-            let newData = { id: Date.now(), email: email, role:role, password:password, name:name, phone:phone, address:address, branch_id:branch_id};
+            let newData = {
+                id: Date.now(),
+                email, role, password, name, telepon, foto
+            };
+
             usersList.push(newData);
-            document.getElementById('email').value = ''; 
-            document.getElementById('password').value = ''; 
-            document.getElementById('role').value = ''; 
-            document.getElementById('branch_id').value = ''; 
-            document.getElementById('name').value = ''; 
-            document.getElementById('phone').value = ''; 
-            document.getElementById('address').value = ''; 
+
+            // reset
+            document.getElementById('foto').value = '';
+            document.getElementById('name').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('role').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('telepon').value = '';
+            
             renderTable();
         }
+
 
         function renderTable() {
             let tbody = document.querySelector("#kategoriTable tbody");
             tbody.innerHTML = '';
 
             usersList.forEach((item, index) => {
+                let fotoPreview = item.foto ? URL.createObjectURL(item.foto) : '';
+
                 let row = `
                     <tr>
                         <td>${index + 1}</td>
+                        <td>
+                            <img src="${fotoPreview}" alt="Foto" class="img-thumbnail" style="max-width: 100px; max-height: 100px;" />
+                        </td>
+                        <td><input type="text" class="form-control" value="${item.name}" onchange="editUser(${item.id}, this.value)"></td>
                         <td><input type="email" class="form-control" value="${item.email}" onchange="editUser(${item.id}, this.value)"></td>
                         <td><input type="password" class="form-control" value="${item.password}" onchange="editUser(${item.id}, this.value)"></td>
                         <td>
@@ -177,17 +177,7 @@
                                 <option value="pengguna" ${item.role === 'pengguna' ? 'selected' : ''}>Pengguna</option>
                             </select>
                         </td>
-                        <td>    
-                            <select class="form-control" onchange="editUser(${item.id}, this.value)">
-                                @foreach ($branch as $b)  
-                                    <option value="{{ $b->branchId }}" ${item.branch_id == {{ $b->branchId }} ? 'selected' : ''}>
-                                        {{ $b->branchName }}
-                                    </option>
-                                @endforeach
-                            </select></td>
-                        <td><input type="text" class="form-control" value="${item.name}" onchange="editUser(${item.id}, this.value)"></td>
-                        <td><input type="text" class="form-control" value="${item.phone}" onchange="editUser(${item.id}, this.value)"></td>
-                        <td><input type="text" class="form-control" value="${item.address}" onchange="editUser(${item.id}, this.value)"></td>
+                        <td><input type="text" class="form-control" value="${item.telepon}" onchange="editUser(${item.id}, this.value)"></td>
                         <td>
                             <button class="btn btn-danger btn-sm" onclick="hapusUser(${item.id})">Hapus</button>
                         </td>
@@ -197,6 +187,7 @@
             });
         }
 
+
         function editUser(id, newValue) {
             let user = usersList.find(item => item.id === id);
             if (user) {
@@ -204,9 +195,7 @@
                 user.password = newValue;
                 user.role = newValue;
                 user.name = newValue;
-                user.phone = newValue;
-                user.address = newValue;
-                user.branch_id = newValue;
+                user.telepon = newValue;
             }
         }
 
@@ -227,11 +216,10 @@
                 formData.append('role', item.role);
                 formData.append('password', item.password);
                 formData.append('name', item.name);
-                formData.append('phone', item.phone);
-                formData.append('address', item.address);
-                formData.append('branch_id', item.branch_id);
+                formData.append('telepon', item.telepon);
+                formData.append('foto', item.foto); // kirim file
 
-                return fetch("{{ url('people/users/store') }}", {
+                return fetch("{{ url('people/admin/store') }}", {
                     method: "POST",
                     headers: {
                         "X-CSRF-TOKEN": "{{ csrf_token() }}"
@@ -251,7 +239,7 @@
                 usersList = [];
                 renderTable();
                 alert("Semua data berhasil disimpan!");
-                window.location.href = "/people/users/"; 
+                window.location.href = "/people/admin/";
             });
         }
 

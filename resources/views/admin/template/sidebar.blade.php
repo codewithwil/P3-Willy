@@ -130,6 +130,30 @@
                   <p>Pengguna/User</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{ url('people/admin') }}" class="nav-link">
+                  <i class="nav-icon bi bi-circle"></i>
+                  <p>Manajemen Admin</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('people/supervisor') }}" class="nav-link">
+                  <i class="nav-icon bi bi-circle"></i>
+                  <p>Manajemen Supervisor</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('people/employee') }}" class="nav-link">
+                  <i class="nav-icon bi bi-circle"></i>
+                  <p>Manajemen Petugas</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('people/owner') }}" class="nav-link">
+                  <i class="nav-icon bi bi-circle"></i>
+                  <p>Manajemen Owner</p>
+                </a>
+              </li>
               @endif
             </ul>
           </li>

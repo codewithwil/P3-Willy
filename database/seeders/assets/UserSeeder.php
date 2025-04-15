@@ -2,6 +2,10 @@
 
 namespace Database\Seeders\assets;
 
+use App\Models\People\Admin\Admin;
+use App\Models\People\Employee\Employee;
+use App\Models\People\Owner\Owner;
+use App\Models\People\Supervisor\Supervisor;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -24,39 +28,70 @@ class UserSeeder extends Seeder
         $password3 = Hash::make('pengguna123'); 
 
         $adminUser = User::create([
-            'name'              => 'Admin',
             'email'             => 'admin@gmail.com',
             'password'          => $password,
-            'email_verified_at' => now(),  
-            'branch_id'         => $administrator->branchId,  
+            'email_verified_at' => now(),     
         ]);
         
+        Admin::create([
+            'user_id' => $adminUser->id,
+            'name'    => 'Admin Utama',
+            'telepon' => '08123456789',
+            'foto'    => 'default.jpg',
+        ]);
+        
+        
         $supervisorUser = User::create([
-            'name'              => 'Willy',
             'email'             => 'supervisor@gmail.com',
             'password'          => $password1,
             'email_verified_at' => now(),
             'branch_id'         => $kiaraCondongBranch->branchId,  
         ]);
+
+        Supervisor::create([
+            'user_id' => $supervisorUser->id,
+            'name'    => 'supervisor mantap',
+            'telepon' => '08123456789',
+            'foto'    => 'default.jpg',
+        ]);
         
         $petugasUser = User::create([
-            'name'              => 'Alvin',
             'email'             => 'petugas@gmail.com',
             'password'          => $password2,
             'email_verified_at' => now(),
             'branch_id'         => $soekarnoHattaBranch->branchId,  
         ]);
 
+        Employee::create([
+            'user_id'    => $petugasUser->id,
+            'name'       => 'petugas mantap',
+            'telepon'    => '08123456789',
+            'foto'       => 'default.jpg',
+            'address'    => 'jalan doang ga jadian',
+            'birthdate'  => '1990-01-01', 
+            'hire_date'  => '2025-04-15', 
+            'salary'     => 5000000,      
+            'gender'     => 0,
+            'status'     => 1      
+        ]);
+        
+
         $ownerUser = User::create([
-            'name'              => 'Owner',
             'email'             => 'owner@gmail.com',
             'password'          => $owner,
             'email_verified_at' => now(),
             'branch_id'         => $antapaniBranch->branchId,  
         ]);
+
+        Owner::create([
+            'user_id' => $ownerUser->id,
+            'name'    => 'owner mantap',
+            'telepon' => '08123456789',
+            'foto'    => 'default.jpg',
+            'address'    => 'kepo',
+        ]);
         
         $penggunaUser = User::create([
-            'name'              => 'Aziz',
             'email'             => 'user@gmail.com',
             'password'          => $password3,
             'email_verified_at' => now(),

@@ -4,7 +4,7 @@
 <div class="app-content-header">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-6"><h3 class="mb-0">Tambah Data User</h3></div>
+            <div class="col-sm-6"><h3 class="mb-0">Edit Data Owner</h3></div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                     <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
@@ -18,19 +18,19 @@
 <div class="app-content">
     <div class="container-fluid">
         <div class="row">
-            <form class="row g-3" action="{{ url('people/users/update/'.$users->id) }}" method="POST" enctype="multipart/form-data">
+            <form class="row g-3" action="{{ url('people/owner/update/'.$users->ownerId) }}" method="POST" enctype="multipart/form-data">
                 @csrf
              
                 <div class="card mb-4" style="border-left: 5px solid #007bff;">
                     <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Akun User</h5>
+                        <h5 class="mb-0">Akun Owner</h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="emailUser" class="form-label">Email</label>
-                                    <input type="email" name="email" class="form-control" id="emailUser" value="{{ $users->email }}" placeholder="Masukkan Email">
+                                    <input type="email" name="email" class="form-control" id="emailUser" value="{{ $users->user->email }}" placeholder="Masukkan Email">
                                 </div>
                                 <div class="mb-3">
                                     <label for="role" class="form-label">Role</label>
@@ -53,20 +53,31 @@
                                     </select>
                                     @endif
                                 </div>
-                                                           
-                            </div>
-                            <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="branch" class="form-label">Cabang</label>
                                     <select name="branch_id" class="form-control" id="branch">
                                         <option value="">--- Pilih Cabang ---</option>
                                         @foreach ($branch as $b)
-                                            <option value="{{ $b->branchId }}" {{ $b->branchId == $users->branch_id ? 'selected' : '' }}>
+                                            <option value="{{ $b->branchId }}" {{ $b->branchId == $users->user->branch_id ? 'selected' : '' }}>
                                                 {{ $b->branchName }}
                                             </option>
                                         @endforeach
                                         </select>
-                                </div>
+                                </div>              
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="foto" class="form-label">Foto</label>
+                                    @if ($users->foto)
+                                        <div class="mb-2">
+                                            <img src="{{ asset('storage/' . $users->foto) }}" 
+                                                 alt="Foto Admin" 
+                                                 class="rounded-circle" 
+                                                 style="width: 100px; height: 100px; object-fit: cover;">
+                                        </div>
+                                    @endif
+                                    <input type="file" name="foto" class="form-control" id="foto">
+                                </div>                                  
                                 <div class="mb-3">
                                     <label for="passwordUser" class="form-label">Password</label>
                                     <input type="password" name="password" class="form-control" id="passwordUser"  placeholder="Masukkan password">
@@ -76,9 +87,9 @@
                         
                     </div>
                 
-                    <!-- Data User Section -->
+                    <!-- Data Supervisor Section -->
                     <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Data User</h5>
+                        <h5 class="mb-0">Data Supervisor</h5>
                     </div>
                     <div class="card-body">
                         <!-- Nama Data user Email -->
@@ -89,14 +100,14 @@
                                     <input type="text" name="name" class="form-control" id="nameUser" value="{{ $users->name }}"  placeholder="Masukkan nama user">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="phoneUser" class="form-label">Nomor Telepon</label>
-                                    <input type="number"  name="phone" class="form-control" id="phoneUser" value="{{ $users->phone }}" placeholder="Masukkan nomor telepon">
+                                    <label for="address" class="form-label">Alamat</label>
+                                    <textarea name="address" id="address" cols="30" rows="5" class="form-control">{{$users->address}}</textarea>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-                                    <label for="addressUser" class="form-label">Alamat</label>
-                                    <textarea class="form-control" name="address" id="addressUser" placeholder="Masukkan alamat perusahaan" cols="30" rows="4">{{ $users->address }}</textarea>
+                                    <label for="telepon" class="form-label">Nomor Telepon</label>
+                                    <input type="number"  name="telepon" class="form-control" id="telepon" value="{{ $users->telepon }}" placeholder="Masukkan nomor telepon">
                                 </div>
                             </div>
                         </div>

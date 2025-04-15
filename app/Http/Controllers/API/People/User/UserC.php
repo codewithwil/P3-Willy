@@ -23,7 +23,7 @@ class UserC extends Controller
     public function index()
     {
         $branch = Branch::all();
-        if (Auth::user()->branch && Auth::user()->branch->branchName === 'Administrator') {
+        if (Auth::user()->hasRole('admin') && Auth::user()->branch_id === null) {
             $users = User::with('branch')->get();
         } else {
             $users = User::where('branch_id', Auth::user()->branch_id)->get();
@@ -47,9 +47,10 @@ class UserC extends Controller
     {
         $users    = User::findOrFail($id);
         $roles    = Role::all(); 
+        $branch = Branch::all();
         $userRole = $users->getRoleNames()->first();
     
-        return view('admin.users.update', compact('users', 'roles', 'userRole'));
+        return view('admin.users.update', compact('users', 'roles', 'userRole', 'branch'));
     }
 
     public function store(Request $request)
@@ -58,7 +59,7 @@ class UserC extends Controller
     
         try {
             $validator = Validator::make($request->all(), [
-                'branch_id' => 'required|exists:branches,branchName',
+                'branch_id' => 'required|exists:branches,branchId',
                 'email'     => 'required|email|unique:users,email',
                 'password'  => 'required|min:6',
                 'name'      => 'required|string|max:255',
@@ -81,8 +82,8 @@ class UserC extends Controller
                 'address'   => $request->input('address'),
             ]);
 
-            $role = $request->input('role');
-            $user->assignRole($role);
+                $role = $request->input('role');
+                $user->assignRole($role);
     
             DB::commit();
     

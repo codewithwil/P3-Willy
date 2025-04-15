@@ -33,11 +33,9 @@ use HasFactory, Notifiable, HasRoles;
  * @var list<string>
  */
     protected $fillable = [
-        'name',
         'email',
         'password',
-        'address',
-        'phone',
+        'branch_id',
     ];
 
 /**
@@ -64,4 +62,5 @@ use HasFactory, Notifiable, HasRoles;
     }
 
     public function branch(){return $this->belongsTo(Branch::class, 'branch_id', 'branchId');}
+
 }
