@@ -142,7 +142,7 @@
 
         function tambahUser() {
             let email    = document.getElementById('email').value.trim();
-            let role     = document.getElementById('role').value.trim();
+            let role = document.querySelector('input[name="role"]').value.trim();
             let password = document.getElementById('password').value.trim();
             let name     = document.getElementById('name').value.trim();
             let telepon  = document.getElementById('telepon').value.trim();
