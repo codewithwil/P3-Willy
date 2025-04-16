@@ -79,6 +79,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="{{ url('setting/member') }}" class="nav-link">
+                  <i class="nav-icon bi bi-circle"></i>
+                  <p>Member</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="{{ url('setting/branch') }}" class="nav-link">
                   <i class="nav-icon bi bi-circle"></i>
                   <p>Promo</p>

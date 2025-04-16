@@ -24,13 +24,15 @@ class BranchC extends Controller
     }
     public function create()
     {
-        return view('admin.resources.branch.create');
+        $company = Company::first();
+        return view('admin.resources.branch.create', compact('company'));
     }
 
     public function edit($branchId)
     {
+        $company = Company::first();
         $branch = Branch::findOrFail($branchId);
-        return view('admin.resources.branch.update', compact('branch'));
+        return view('admin.resources.branch.update', compact('branch', 'company'));
     }
 
 
@@ -39,7 +41,7 @@ class BranchC extends Controller
         DB::beginTransaction();
         try {
             $validator = Validator::make($req->all(), [
-                'branchName'        => 'required|string|min:3|max:75',
+                'company_id'        => 'required',
                 'address'           => 'required|string|min:3|max:255',
                 'email'             => 'required|string|min:3|max:75',
                 'operationalHours'  => 'required|string|min:1|max:50',
@@ -54,7 +56,7 @@ class BranchC extends Controller
             }
     
             $branch = Branch::create([
-                'branchName'       => $req->input('branchName'),
+                'company_id'       => $req->input('company_id'),
                 'address'          => $req->input('address'),
                 'email'            => $req->input('email'),
                 'operationalHours' => $req->input('operationalHours'),
@@ -76,7 +78,7 @@ class BranchC extends Controller
     public function update(Request $req, $branchId)
     {
         $req->validate([
-            'branchNameEdit'        => 'nullable|string|min:3|max:75',
+            'company_id'            => 'nullable',
             'addressEdit'           => 'nullable|string|min:3|max:255',
             'emailEdit'             => 'nullable|string|min:3|max:75',
             'operationalHoursEdit'  => 'nullable|string|min:1|max:50',
@@ -88,7 +90,7 @@ class BranchC extends Controller
         DB::beginTransaction();
         try {
             $branch                   = Branch::findOrFail($branchId);
-            $branch->branchName       = $req->branchNameEdit;
+            $branch->company_id       = $req->company_id;
             $branch->address          = $req->addressEdit;
             $branch->email            = $req->emailEdit;
             $branch->operationalHours = $req->operationalHoursEdit;

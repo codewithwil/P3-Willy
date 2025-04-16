@@ -1,5 +1,5 @@
 @extends('admin.template.template')
-@section('title', 'Invoice Gudang')
+@section('title', 'Invoice Member')
 
 @section('content')
 @push('css')
@@ -111,13 +111,12 @@
 <div class="app-content-header">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-6"><h3 class="mb-0">Invoice Gudang</h3></div>
+            <div class="col-sm-6"><h3 class="mb-0">Invoice Member</h3></div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                     <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
                     <li class="breadcrumb-item">Setting</li>
-                    <li class="breadcrumb-item">Manajemen Ruangan</li>
-                    <li class="breadcrumb-item active" aria-current="page">Gudang</li>
+                    <li class="breadcrumb-item active" aria-current="page">Member</li>
                 </ol>
             </div>
         </div>
@@ -149,18 +148,22 @@
                                 </div>
                             </div>
 
-                            <table id="dataTableBuilding" class="table table-striped" style="width:100%">
+                            <table id="dataTableCategory" class="table table-striped" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Nama Gudang</th>
+                                        <th>Nama Member</th>
+                                        <th>Tanggal Daftar</th>
+                                        <th>Status Member</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($building as $build)
+                                    @foreach ($member as $m)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $build->buildingName }}</td>
+                                        <td>{{ $loop->iteration  }}</td>
+                                        <td>{{ $m->user->customer->name  }}</td>
+                                        <td>{{ $m->dateJoin  }}</td>
+                                        <td>{{ $m->status_label  }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -180,7 +183,7 @@
     <script src="https://cdn.datatables.net/2.2.1/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.2.1/js/dataTables.bootstrap5.js"></script>
     <script>
-        new DataTable('#dataTableBuilding');
+        new DataTable('#dataTableCategory');
         
         function printInvoice() {
             var content = document.getElementById('printableArea').innerHTML;

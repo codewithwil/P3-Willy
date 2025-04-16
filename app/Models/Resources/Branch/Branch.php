@@ -2,6 +2,7 @@
 
 namespace App\Models\Resources\Branch;
 
+use App\Models\Resources\Company\Company;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,9 +13,10 @@ class Branch extends Model
     protected $table      = 'branches';
     protected $primaryKey = 'branchId';
     protected $fillable   = [
-        'branchName', 'address', 'email', 'operationalHours', 'phone',
+        'company_id', 'address', 'email', 'operationalHours', 'phone',
         'ltd', 'lng', 'status' 
     ];
 
     public function users(){return $this->hasMany(User::class, 'branch_id', 'branchId');}
+    public function company(){return $this->belongsTo(Company::class, 'company_id', 'companyId');}
 }

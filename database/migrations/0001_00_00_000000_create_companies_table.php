@@ -19,9 +19,7 @@ return new class extends Migration
                 $table->id('companyId');   
                 $table->string('image')->nullable(true);   
                 $table->string('name', 50);   
-                $table->string('email')->unique();   
-                $table->string('phone', 16);   
-                $table->text('address');   
+                $table->string('web', 75);   
                 $table->timestamps();
             });
         }

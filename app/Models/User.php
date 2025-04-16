@@ -10,7 +10,7 @@ use App\Models\People\Customers\Customers;
 use App\Models\People\Employee\Employee as EmployeeEmployee;
 use App\Models\People\Supervisor\Supervisor;
 use App\Models\Resources\Branch\Branch;
-
+use App\Models\Resources\Member\Member;
 use Illuminate\{
 Database\Eloquent\Factories\HasFactory,
 Foundation\Auth\User as Authenticatable,
@@ -80,6 +80,10 @@ use HasFactory, Notifiable, HasRoles;
         return $this->hasOne(EmployeeEmployee::class, 'user_id');
     }
 
+    public function member()
+    {
+        return $this->hasOne(Member::class, 'user_id');
+    }
     public function realName()
     {
         if ($this->hasRole('admin') && $this->admin) {

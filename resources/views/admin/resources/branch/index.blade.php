@@ -42,7 +42,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama Cabang</th>
+                                    <th>Nama Perusahaan</th>
                                     <th>Email Cabang</th>
                                     <th>Nomor Telepon</th>
                                     <th>Alamat Cabang</th>
@@ -54,7 +54,7 @@
                                 @foreach ($branch as $b)
                                 <tr>
                                     <td>{{ $loop->iteration  }}</td>
-                                    <td>{{ $b->branchName  }}</td>
+                                    <td>{{ $b->company->name  }}</td>
                                     <td>{{ $b->email  }}</td>
                                     <td>{{ $b->phone  }}</td>
                                     <td>{{ $b->address  }}</td>

@@ -15,7 +15,7 @@ return new class extends Migration
             Schema::create('branches', function (Blueprint $table){
                 $table->engine = "InnoDB";
                 $table->id('branchId');
-                $table->string('branchName', 75);
+                $table->unsignedBigInteger('company_id');
                 $table->text('address');
                 $table->string('email', 75)->unique();
                 $table->string('operationalHours', 50);    
@@ -24,6 +24,12 @@ return new class extends Migration
                 $table->decimal('lng', 65, 30);    
                 $table->tinyInteger('status')->default(1);
                 $table->timestamps();
+
+                $table->foreign('company_id')
+                ->references('companyId')
+                ->on('companies')
+                ->onUpdate("cascade")
+                ->onDelete("restrict");
             });
         }
     }

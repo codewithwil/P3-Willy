@@ -26,11 +26,9 @@ class CompanyC extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'required|numeric',
+            'name'  => 'required|string|max:255',
+            'web'   => 'nullable|string|max:75',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'address' => 'required|string|max:500',
         ]);
 
         DB::beginTransaction();

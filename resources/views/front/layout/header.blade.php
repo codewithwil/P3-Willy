@@ -3,9 +3,12 @@
     <a class="navbar-brand fw-bold" href="#">LaundryKu</a>
 
     <div class="d-flex align-items-center gap-2 ms-auto">
-      <a href="{{ route('register') }}" class="btn btn-outline-light btn-sm">Daftar Member</a>
-
       @auth
+        {{-- Cek apakah user sudah terdaftar sebagai member --}}
+        @if (auth()->user()->member == null)
+          <a href="/configuration/member" class="btn btn-outline-light btn-sm">Daftar Member</a>
+        @endif
+
         <div class="nav-item dropdown">
           <a class="nav-link dropdown-toggle d-flex align-items-center text-white" href="#" id="navbarDropdown" role="button"
              data-bs-toggle="dropdown" aria-expanded="false">
@@ -14,13 +17,20 @@
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
             <li><a class="dropdown-item" href="#">Profil Saya</a></li>
             <li>
-              <form action="{{ route('logout') }}" method="POST" class="d-inline">
+              <form action="{{ route('logout') }}" method="GET" class="d-inline">
                 @csrf
                 <button class="dropdown-item" type="submit">Logout</button>
               </form>
             </li>
           </ul>
         </div>
+
+        @if(auth()->user()->customer)
+          <span class="text-white ms-3">
+            Saldo: Rp{{ number_format(auth()->user()->customer->saldo, 0, ',', '.') }}
+          </span>
+        @endif
+
       @else
         <a href="{{ route('login') }}" class="btn btn-light btn-sm">Login</a>
       @endauth

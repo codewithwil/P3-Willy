@@ -61,7 +61,6 @@ class OwnerC extends Controller
             $validator = Validator::make($request->all(), [
                 'email'    => 'required|email|unique:users,email',
                 'password' => 'required|min:6',
-                'branch_id' => 'required',
                 'name'     => 'required|string|max:255',
                 'telepon'  => 'required|numeric',
                 'role'     => 'required|in:owner,owner,petugas,owner,pengguna',
@@ -79,14 +78,14 @@ class OwnerC extends Controller
             $user = User::create([
                 'email'    => $request->input('email'),
                 'password' => Hash::make($request->input('password')),
-                'branch_id' =>  $request->input('branch_id'),
+                'branch_id' =>  null,
             ]);
     
             $user->assignRole($request->input('role'));
     
             $fotoPath = null;
             if ($request->hasFile('foto')) {
-                $fotoPath = $request->file('foto')->store('supervissor_foto', 'public');
+                $fotoPath = $request->file('foto')->store('owner_foto', 'public');
             }
     
             Owner::create([
@@ -123,7 +122,6 @@ class OwnerC extends Controller
             'password'  => 'nullable|min:8',
             'role'      => 'nullable|exists:roles,name',
             'foto'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'branch_id' => 'nullable',
             'address'      => 'nullable|string|max:255',
         ]);
     
@@ -138,7 +136,6 @@ class OwnerC extends Controller
             if ($request->filled('password')) {
                 $user->password = Hash::make($request->password);
             }
-            $user->branch_id = $request->branch_id;
             $user->save();
     
             if ($request->filled('role')) {
@@ -151,7 +148,7 @@ class OwnerC extends Controller
                 }
     
                 $file     = $request->file('foto');
-                $fotoPath = $file->store('supervissor_foto', 'public');  
+                $fotoPath = $file->store('owner_foto', 'public');  
                 $owner->foto = $fotoPath;  
             }
     

@@ -3,6 +3,7 @@
 namespace Database\Seeders\assets;
 
 use App\Models\People\Admin\Admin;
+use App\Models\People\Customers\Customers;
 use App\Models\People\Employee\Employee;
 use App\Models\People\Owner\Owner;
 use App\Models\People\Supervisor\Supervisor;
@@ -16,10 +17,9 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $administrator = DB::table('branches')->where('branchName', 'Administrator')->first();
-        $antapaniBranch = DB::table('branches')->where('branchName', 'Antapani')->first();
-        $kiaraCondongBranch = DB::table('branches')->where('branchName', 'Kiara Condong')->first();
-        $soekarnoHattaBranch = DB::table('branches')->where('branchName', 'Soekarno Hatta')->first();
+        $antapaniBranch = DB::table('branches')->where('email', 'antapani@branch.com')->first();
+        $kiaraCondongBranch = DB::table('branches')->where('email', 'kiaracondong@branch.com')->first();
+        $soekarnoHattaBranch = DB::table('branches')->where('email', 'soekarnohatta@branch.com')->first();
 
         $password  = Hash::make('admin123'); 
         $password1 = Hash::make('supervisor123'); 
@@ -80,7 +80,7 @@ class UserSeeder extends Seeder
             'email'             => 'owner@gmail.com',
             'password'          => $owner,
             'email_verified_at' => now(),
-            'branch_id'         => $antapaniBranch->branchId,  
+            'branch_id'         => null,  
         ]);
 
         Owner::create([
@@ -95,7 +95,15 @@ class UserSeeder extends Seeder
             'email'             => 'user@gmail.com',
             'password'          => $password3,
             'email_verified_at' => now(),
-            'branch_id'         => $kiaraCondongBranch->branchId,  
+            'branch_id'         => null,  
+        ]);
+
+        Customers::create([
+            'user_id' => $penggunaUser->id,
+            'name'    => 'pengguna mantap',
+            'telepon' => '08123456789',
+            'foto'    => 'default.jpg',
+            'address'    => 'kepo',
         ]);
 
         $adminRole      = Role::where('name', 'admin')->first();

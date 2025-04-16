@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
-            $table->id('customerId');
+        Schema::create('members', function (Blueprint $table) {
+            $table->id('memberId');
             $table->unsignedBigInteger('user_id');
-            $table->string('foto', 200);
-            $table->string('name', 75);
-            $table->unsignedBigInteger('telepon');
-            $table->text('address');
-            $table->decimal('saldo', 12, 2)->default(0);
+            $table->date('dateJoin');
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
 
             $table->foreign('user_id')
@@ -27,7 +24,6 @@ return new class extends Migration
             ->onUpdate("cascade")
             ->onDelete("restrict");
         });
-
     }
 
     /**
@@ -35,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('members');
     }
 };

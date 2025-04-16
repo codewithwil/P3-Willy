@@ -43,8 +43,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="branchNameEdit" class="form-label">Nama Cabang</label>
-                                        <input type="text" name="branchNameEdit" class="form-control" id="branchNameEdit" value="{{ $branch->branchName }}"  placeholder="Masukkan nama cabang">
+                                        <label for="branchNameEdit" class="form-label">Nama Perusahaan</label>
+                                        <select name="company_id" class="form-control" id="company_id" disabled>
+                                            <option value="{{ $branch->company->companyId }}" selected>
+                                                {{ $branch->company->name }}
+                                            </option>
+                                        </select>
+                                        <input type="hidden" name="company_id" value="{{ $branch->company_id }}">
+                                        
                                     </div>
                                     <div class="mb-3">
                                         <label for="emailEdit" class="form-label">Email Cabang</label>
@@ -87,76 +93,6 @@
                 </form>
             </div>         
         </div>
-        <div class="col-md-12">    
-            <div class="card shadow-lg border-0 rounded">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="fas fa-list-alt me-2"></i>Tambahkan cabang</h5>
-                </div>
-                <div class="card-body p-3">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="branchName" class="form-label">Nama Cabang</label>
-                                <input type="text" name="branchName" class="form-control" id="branchName"  placeholder="Masukkan nama cabang">
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email Cabang</label>
-                                <input type="email" name="email" class="form-control" id="email" placeholder="Masukkan email cabang">
-                            </div>
-                            <div class="mb-3">
-                                <label for="phone" class="form-label">Nomor Telepon Cabang</label>
-                                <input type="number" name="phone" class="form-control" id="phone"  placeholder="Masukkan nomor telepon cabang">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Pilih Lokasi di Peta</label>
-                                <div id="map2"></div>
-                            </div>    
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="address" class="form-label">Alamat Cabang</label>
-                                <textarea name="address" id="address" cols="30" rows="4" class="form-control"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="operationalHours" class="form-label">Jam Operasional</label>
-                                <input type="text" name="operationalHours" class="form-control" id="operationalHours" placeholder="Masukkan jam operasional cabang">
-                            </div>
-                            <div class="mb-3">
-                                <label for="ltd" class="form-label">Latitude</label>
-                                <input type="text" name="ltd" class="form-control" id="ltd">
-                            </div>
-                            <div class="mb-3">
-                                <label for="lng" class="form-label">Longitude</label>
-                                <input type="text" name="lng" class="form-control" id="lng">
-                            </div>
-                            <button type="button" class="btn btn-success mb-4" onclick="tambahCabang()">Tambah</button>        
-                        </div>
-                    </div>  
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered align-middle text-center" id="branchTable">
-                            <thead class="bg-dark text-white">
-                                <tr>
-                                    <th style="width: 10%;">No</th>
-                                    <th style="width: 15%;">Nama</th>
-                                    <th style="width: 15%;">Email</th>
-                                    <th style="width: 15%;">Telepon</th>
-                                    <th style="width: 15%;">Alamat</th>
-                                    <th style="width: 15%;">Jam Operasional</th>
-                                    <th style="width: 15%;">Latitude</th>
-                                    <th style="width: 15%;">Longtude</th>
-                                    <th style="width: 15%;">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>                                  
-                            </tbody>
-                        </table>
-                    </div>
-                    <button type="button" class="btn btn-md btn-success fwbold mt-3 shadow-sm" onclick="simpanSemua()">
-                        <i class="fas fa-save me-2"></i> Simpan Semua
-                    </button>
-                </div>
-            </div>
-        </div> 
     </div>
 
     @push('js')
@@ -165,9 +101,8 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-            const defaultLat = -6.200000;
-            const defaultLng = 106.816666;
-
+            const defaultLat = {{ $branch->ltd ?? -6.200000 }};
+            const defaultLng = {{ $branch->lng ?? 106.816666 }};
             // Initialize first map (Map 1)
             const map = L.map('map').setView([defaultLat, defaultLng], 12);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

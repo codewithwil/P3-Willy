@@ -31,7 +31,6 @@
                         <h5 class="mb-0">Data Perusahaan</h5>
                     </div>
                     <div class="card-body">
-                        <!-- Nama Perusahaan and Email -->
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -39,12 +38,8 @@
                                     <input type="text" name="name" class="form-control" id="companyName" value="{{ $company->name ?? ''}}" placeholder="Masukkan nama perusahaan">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="companyEmail" class="form-label">Email Perusahaan</label>
-                                    <input type="email" name="email" class="form-control" id="companyEmail" value="{{ $company->email ?? ''}}" placeholder="Masukkan email perusahaan">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="companyPhone" class="form-label">Nomor Telepon Perusahaan</label>
-                                    <input type="number" name="phone" class="form-control" id="companyPhone" value="{{ $company->phone ?? ''}}" placeholder="Masukkan nomor telepon">
+                                    <label for="webCompany" class="form-label">Web Perusahaan</label>
+                                    <input type="url" name="web" class="form-control" id="webCompany" value="{{ $company->web ?? ''}}" placeholder="Masukkan web perusahaan">
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -69,17 +64,6 @@
                         </div>
                     </div>
                 
-                    <!-- Informasi Alamat Perusahaan Section -->
-                    <div class="card-header bg-primary text-white mt-4">
-                        <h5 class="mb-0">Informasi Alamat Perusahaan</h5>
-                    </div>
-                    <div class="card-body">
-                        <!-- Alamat Perusahaan -->
-                        <div class="col-md-12 mt-3">
-                            <label for="companyAddress" class="form-label">Alamat Perusahaan</label>
-                            <textarea class="form-control" name="address" id="companyAddress" placeholder="Masukkan alamat perusahaan" cols="30" rows="4">{{ $company->address ?? ''}}</textarea>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Tombol Submit -->

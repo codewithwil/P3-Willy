@@ -75,7 +75,7 @@
                                     <td>{{ $us->user->email }}</td>
                                     <td>{{ $us->telepon ?? 'phone not set' }}</td>
                                     <td>{{ $us->address ?? 'address not set' }}</td>
-                                    <td>{{ $us->gender }}</td>
+                                    <td>{{ $us->gender_label }}</td>
                                     <td>
                                         @foreach ($us->user->roles as $role)
                                             {{ $role->name }}
@@ -84,8 +84,6 @@
                                     <td>
                                         @if(auth()->user()->hasRole(['admin', 'supervisor']))
                                         <a href="{{ url('/people/employee/edit/' . $us->employeeId) }}" class="btn btn-primary">Edit</a>        
-                                        @endif
-                                        @if(auth()->user()->hasRole(['admin']) && auth()->user()->id !== $us->user_id)
                                             <form action="{{ url('people/employee/delete', $us->employeeId) }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 @method('POST') 

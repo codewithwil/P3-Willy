@@ -42,8 +42,11 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="branchName" class="form-label">Nama Cabang</label>
-                                <input type="text" name="branchName" class="form-control" id="branchName"  placeholder="Masukkan nama cabang">
+                                <label for="company_id" class="form-label">Nama Perusahaan</label>
+                                <select name="company_id" class="form-control" id="company_id" disabled>
+                                    <option value="{{ $company->companyId }}">{{ $company->name }}</option>
+                                </select>
+                                
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email Cabang</label>
@@ -167,7 +170,9 @@
     let cabangList = [];
 
     function tambahCabang() {
-        let branchName = document.getElementById('branchName').value.trim();
+        let companySelect = document.getElementById('company_id'); 
+        let company_id = companySelect.value.trim();
+        let company_name = companySelect.options[companySelect.selectedIndex].text;
         let email = document.getElementById('email').value.trim();
         let phone = document.getElementById('phone').value.trim();
         let address = document.getElementById('address').value.trim();
@@ -175,14 +180,15 @@
         let ltd = document.getElementById('ltd').value.trim();
         let lng = document.getElementById('lng').value.trim();
 
-        if (!branchName || !email || !phone || !address || !operationalHours || !ltd || !lng) {
+        if (!company_id || !email || !phone || !address || !operationalHours || !ltd || !lng) {
             alert("Semua field harus diisi!");
             return;
         }
 
         let newData = {
             id: Date.now(),
-            branchName,
+            company_id,
+            company_name,
             email,
             phone,
             address,
@@ -193,7 +199,6 @@
 
         cabangList.push(newData);
 
-        document.getElementById('branchName').value = '';
         document.getElementById('email').value = '';
         document.getElementById('phone').value = '';
         document.getElementById('address').value = '';
@@ -212,7 +217,7 @@
             let row = `
                 <tr>
                     <td>${index + 1}</td>
-                    <td>${item.branchName}</td>
+                    <td>${item.company_name}</td>
                     <td>${item.email}</td>
                     <td>${item.phone}</td>
                     <td>${item.address}</td>
@@ -241,7 +246,7 @@
 
         let requests = cabangList.map(item => {
             let formData = new FormData();
-            formData.append('branchName', item.branchName);
+            formData.append('company_id', item.company_id);
             formData.append('email', item.email);
             formData.append('phone', item.phone);
             formData.append('address', item.address);

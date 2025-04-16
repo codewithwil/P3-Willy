@@ -51,6 +51,7 @@
                                     <th>Nomor Telepon</th>
                                     <th>Alamat</th>
                                     <th>Level</th>
+                                    <th>Saldo</th>
                                     @if(auth()->user()->hasRole(['admin', 'supervisor']))
                                     <th>Aksi</th>
                                     @endif
@@ -76,9 +77,10 @@
                                     <td>{{ $us->address ?? 'address not set' }}</td>
                                     <td>
                                         @foreach ($us->user->roles as $role)
-                                            {{ $role->name }}
+                                        {{ $role->name }}
                                         @endforeach
                                     </td>
+                                    <td>Rp {{ number_format($us->saldo, 0, ',', '.')}}</td>
                                     <td>
                                         @if(auth()->user()->hasRole(['admin', 'supervisor']))
                                         <a href="{{ url('/people/customer/edit/' . $us->customerId) }}" class="btn btn-primary">Edit</a>        

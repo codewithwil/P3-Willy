@@ -52,8 +52,20 @@
           <div class="row justify-content-center">
             <div class="col-md-6">
               <div class="text-center mb-4">
-                <img src="{{ asset('logo.png') }}" alt="Logo Laundry" class="img-fluid rounded-circle shadow-sm mb-3" style="width: 80px;">
-                <h3 class="fw-bold">Daftar <span class="text-primary">Laundry</span></h3>
+                <?php
+                use App\Models\Resources\Company\Company;
+      
+                $company = Company::first();
+                ?>
+                @if($company && $company->image)
+                <img
+                    src="{{ asset($company->image) }}"
+                    alt="{{ $company->name ?? 'Company Logo' }}"
+                    class="img-fluid rounded-circle shadow-sm mb-3" style="width: 80px;"
+                />
+                <h3 class="fw-bold">Daftar <span class="text-primary">{{ $company->name }}</span></h3>
+                @endif
+
                 <p class="text-muted">Silakan isi form untuk membuat akun baru</p>
               </div>
       

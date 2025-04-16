@@ -10,11 +10,11 @@
         </li>
         <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
         <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
-        {{-- <li class="nav-item d-none d-md-block">
+        <li class="nav-item d-none d-md-block">
           <span class="nav-link">
-              <strong>Cabang {{ Auth::user()->branch->branchName }}</strong>
+              <strong>Cabang {{ Auth::user()->branch->address ?? 'Utama'}}</strong>
           </span>
-        </li> --}}
+        </li>
         
       </ul>
       <!--end::Start Navbar Links-->

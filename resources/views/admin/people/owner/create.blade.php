@@ -32,24 +32,11 @@
                             </div>
                             <div class="mb-3">
                                 <label for="role" class="form-label">Role</label>
-                                <select name="role" id="role" class="form-control">
+                                <select name="role" id="role" class="form-control" disabled>
                                     <option value="">Pilih Role</option>
                                     <option value="owner" selected>owner</option>
                                 </select>
-                            </div>    
-                            <div class="mb-3">
-                                <label for="branch" class="form-label">Cabang</label>
-                                <select name="branch_id" class="form-control" id="branch_id">
-                                    <option value="">--- Pilih Cabang ---</option>
-                                    @foreach ($branch as $b)
-                                        @if ($b->branchName === null && Auth::user()->getRoleNames()->first() === 'admin')
-                                            <option value="{{ $b->branchId }}">{{ $b->branchName }}</option>
-                                        @elseif ($b->branchName !== null)
-                                            <option value="{{ $b->branchId }}">{{ $b->branchName }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>                                
-                            </div>                               
+                            </div>                  
                         </div>
                         <div class="col-md-6">  
                             <div class="mb-3">
@@ -109,7 +96,6 @@
                                             <th style="width: 15%;">Password</th>
                                             <th style="width: 10%;">Role</th>
                                             <th style="width: 10%;">Nomor Telepon</th>
-                                            <th style="width: 10%;">Cabang</th>
                                             <th style="width: 10%;">Alamat</th>
                                             <th style="width: 5%;">Aksi</th>
                                         </tr>
@@ -142,29 +128,25 @@
             let name     = document.getElementById('name').value.trim();
             let telepon  = document.getElementById('telepon').value.trim();
             let foto     = document.getElementById('foto').files[0]; 
-            let branch_id  = document.getElementById('branch_id').value.trim();
             let address  = document.getElementById('address').value.trim();
 
-            if (email === '' || role === '' || password === '' || name === '' || telepon === '' || !foto || branch_id === '' || address === '') {
+            if (email === '' || role === '' || password === '' || name === '' || telepon === '' || !foto || address === '') {
                 alert("Semua data wajib diisi, termasuk foto!");
                 return;
             }
 
             let newData = {
                 id: Date.now(),
-                email, role, password, name, telepon, foto, branch_id, address
+                email, role, password, name, telepon, foto, address
             };
 
             usersList.push(newData);
 
-            // reset
             document.getElementById('foto').value = '';
             document.getElementById('name').value = '';
             document.getElementById('email').value = '';
-            document.getElementById('role').value = '';
             document.getElementById('password').value = '';
             document.getElementById('telepon').value = '';
-            document.getElementById('branch_id').value = '';
             document.getElementById('address').value = '';
             
             renderTable();
@@ -193,15 +175,6 @@
                                 </select>
                                 </td>
                                 <td><input type="text" class="form-control" value="${item.telepon}" onchange="editUser(${item.id}, this.value)"></td>
-                                <td>    
-                                    <select class="form-control" onchange="editUser(${item.id}, this.value)">
-                                        @foreach ($branch as $b)  
-                                        <option value="{{ $b->branchId }}" ${item.branch_id == {{ $b->branchId }} ? 'selected' : ''}>
-                                            {{ $b->branchName }}
-                                            </option>
-                                            @endforeach
-                                            </select>
-                                            </td>
                                 <td><input type="text" class="form-control" value="${item.address}" onchange="editUser(${item.id}, this.value)"></td>
                         <td>
                             <button class="btn btn-danger btn-sm" onclick="hapusUser(${item.id})">Hapus</button>
@@ -221,7 +194,6 @@
                 user.role = newValue;
                 user.name = newValue;
                 user.telepon = newValue;
-                user.branch_id = newValue;
                 user.address = newValue;
             }
         }
@@ -245,7 +217,6 @@
                 formData.append('name', item.name);
                 formData.append('telepon', item.telepon);
                 formData.append('foto', item.foto); 
-                formData.append('branch_id', item.branch_id); 
                 formData.append('address', item.address); 
 
                 return fetch("{{ url('people/owner/store') }}", {

@@ -32,7 +32,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="role" class="form-label">Role</label>
-                                <select name="role" id="role" class="form-control">
+                                <select name="role" id="role" class="form-control" disabled>
                                     <option value="">Pilih Role</option>
                                     <option value="admin" selected>Admin</option>
                                 </select>
@@ -136,11 +136,9 @@
 
             usersList.push(newData);
 
-            // reset
             document.getElementById('foto').value = '';
             document.getElementById('name').value = '';
             document.getElementById('email').value = '';
-            document.getElementById('role').value = '';
             document.getElementById('password').value = '';
             document.getElementById('telepon').value = '';
             
