@@ -32,15 +32,10 @@
                             </div>
                             <div class="mb-3">
                                 <label for="role" class="form-label">Role</label>
-                                <select name="role" id="role" class="form-control" disabled>
+                                <select name="role" id="role" class="form-control">
                                     <option value="">Pilih Role</option>
-                                    <option value="admin">Admin</option>
                                     <option value="supervisor" selected>Supervisor</option>
-                                    <option value="petugas">Petugas</option>
-                                    <option value="pengguna">Pengguna</option>
-                                    <option value="owner">owner</option>
                                 </select>
-                                <input type="hidden" name="role" value="supervisor">
                             </div>    
                             <div class="mb-3">
                                 <label for="branch" class="form-label">Cabang</label>
@@ -137,7 +132,7 @@
 
         function tambahUser() {
             let email    = document.getElementById('email').value.trim();
-            let role = document.querySelector('input[name="role"]').value.trim();
+            let role = document.getElementById('role').value.trim();
             let password = document.getElementById('password').value.trim();
             let name     = document.getElementById('name').value.trim();
             let telepon  = document.getElementById('telepon').value.trim();
@@ -187,11 +182,7 @@
                         <td><input type="password" class="form-control" value="${item.password}" onchange="editUser(${item.id}, this.value)"></td>
                         <td>
                             <select class="form-control" onchange="editUser(${item.id}, 'role', this.value)">
-                                <option value="admin" ${item.role === 'admin' ? 'selected' : ''}>Admin</option>
                                 <option value="supervisor" ${item.role === 'supervisor' ? 'selected' : ''}>Supervisor</option>
-                                <option value="petugas" ${item.role === 'petugas' ? 'selected' : ''}>Petugas</option>
-                                <option value="teknisi" ${item.role === 'teknisi' ? 'selected' : ''}>Teknisi</option>
-                                <option value="pengguna" ${item.role === 'pengguna' ? 'selected' : ''}>Pengguna</option>
                             </select>
                         </td>
                         <td><input type="text" class="form-control" value="${item.telepon}" onchange="editUser(${item.id}, this.value)"></td>

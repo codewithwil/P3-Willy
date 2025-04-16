@@ -35,10 +35,6 @@
                                 <select name="role" id="role" class="form-control">
                                     <option value="">Pilih Role</option>
                                     <option value="admin" selected>Admin</option>
-                                    <option value="supervisor">Supervisor</option>
-                                    <option value="petugas">Petugas</option>
-                                    <option value="pengguna">Pengguna</option>
-                                    <option value="owner">owner</option>
                                 </select>
                             </div>                                
                         </div>

@@ -35,14 +35,14 @@
                                 <div class="mb-3">
                                     <label for="role" class="form-label">Role</label>
                                     @if(auth()->user()->hasRole(['admin']))
-                                    <select name="role" id="role" class="form-control">
-                                        <option value="">Pilih Role</option>
+                                    <select name="role_display" id="role" class="form-control" disabled>
                                         @foreach ($roles as $role)
                                             <option value="{{ $role->name }}" {{ $userRole === $role->name ? 'selected' : '' }}>
                                                 {{ ucfirst($role->name) }}
                                             </option>
                                         @endforeach
                                     </select>
+                                    <input type="hidden" name="role" value="{{ $userRole }}">
                                     @else
                                     <select name="role" id="role" class="form-control" disabled>
                                         @foreach ($roles as $role)

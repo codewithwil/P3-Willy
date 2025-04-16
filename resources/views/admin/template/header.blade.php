@@ -164,7 +164,6 @@
               Hallo, {{ optional(Auth::user()->admin)->name }}
                {{ optional(Auth::user()->supervisor)->name }}
               {{ optional(Auth::user()->employee)->name }}
-               {{ optional(Auth::user()->customer)->name }} | 
               {{ Auth::user()->getRoleNames()->first() }}
           </span>
           
