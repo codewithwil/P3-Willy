@@ -85,7 +85,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ url('setting/branch') }}" class="nav-link">
+                <a href="{{ url('setting/promo') }}" class="nav-link">
                   <i class="nav-icon bi bi-circle"></i>
                   <p>Promo</p>
                 </a>

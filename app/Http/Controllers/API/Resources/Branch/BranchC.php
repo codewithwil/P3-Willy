@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Resources\Branch\Branch;
 use App\Models\Resources\Company\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,9 +14,15 @@ class BranchC extends Controller
 {
     public function index()
     {
-        $branch = Branch::where('status', Branch::STATUS_ACTIVE)->get();
+        if (Auth::user()->hasRole('admin') && Auth::user()->branch_id === null) {
+            $branch = Branch::where('status', Branch::STATUS_ACTIVE)->get();
+        } else {
+            $branch = Branch::where('branchId', Auth::user()->branch_id)->get();
+        }
+    
         return view('admin.resources.branch.index', compact('branch'));
     }
+    
 
     public function invoice(){
         $branch    = Branch::where('status', Branch::STATUS_ACTIVE)->get();

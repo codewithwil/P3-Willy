@@ -42,10 +42,10 @@
                                 <select name="branch_id" class="form-control" id="branch_id">
                                     <option value="">--- Pilih Cabang ---</option>
                                     @foreach ($branch as $b)
-                                        @if ($b->branchName === null && Auth::user()->getRoleNames()->first() === 'admin')
-                                            <option value="{{ $b->branchId }}">{{ $b->branchName }}</option>
-                                        @elseif ($b->branchName !== null)
-                                            <option value="{{ $b->branchId }}">{{ $b->branchName }}</option>
+                                        @if ($b->address === null && Auth::user()->getRoleNames()->first() === 'admin')
+                                            <option value="{{ $b->branchId }}">{{ $b->address }}</option>
+                                        @elseif ($b->address !== null)
+                                            <option value="{{ $b->branchId }}">{{ $b->address }}</option>
                                         @endif
                                     @endforeach
                                 </select>                                

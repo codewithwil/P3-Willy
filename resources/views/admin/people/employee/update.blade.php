@@ -60,7 +60,7 @@
                                         <option value="">--- Pilih Cabang ---</option>
                                         @foreach ($branch as $b)
                                             <option value="{{ $b->branchId }}" {{ $b->branchId == $users->user->branch_id ? 'selected' : '' }}>
-                                                {{ $b->branchName }}
+                                                {{ $b->address }}
                                             </option>
                                         @endforeach
                                         </select>

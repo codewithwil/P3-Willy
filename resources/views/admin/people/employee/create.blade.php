@@ -43,7 +43,7 @@
                                 <select name="branch_id" class="form-control" id="branch_id">
                                     <option value="">--- Pilih Cabang ---</option>
                                     @foreach ($branch as $b)
-                                            <option value="{{ $b->branchId }}">{{ $b->branchName }}</option>
+                                            <option value="{{ $b->branchId }}">{{ $b->address }}</option>
                                     @endforeach
                                 </select>                                
                             </div>                                      

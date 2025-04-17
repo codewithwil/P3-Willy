@@ -1,5 +1,5 @@
 @extends('admin.template.template')
-@section('title', 'Invoice Kategori')
+@section('title', 'Invoice Shift')
 
 @section('content')
 @push('css')
@@ -111,12 +111,12 @@
 <div class="app-content-header">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-6"><h3 class="mb-0">Invoice Supplier</h3></div>
+            <div class="col-sm-6"><h3 class="mb-0">Invoice Shift</h3></div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                     <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
                     <li class="breadcrumb-item">Setting</li>
-                    <li class="breadcrumb-item active" aria-current="page">Supplier</li>
+                    <li class="breadcrumb-item active" aria-current="page">Shift</li>
                 </ol>
             </div>
         </div>
@@ -148,24 +148,26 @@
                                 </div>
                             </div>
 
-                            <table id="dataTableCategory" class="table table-striped" style="width:100%">
+                            <table id="dataTableUnit" class="table table-striped" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Nama Supplier</th>
-                                        <th>Email</th>
-                                        <th>Nomor Telepon</th>
-                                        <th>Alamat</th>
+                                        <th>Nama Shift</th>
+                                        <th>Waktu Shift Mulai</th>
+                                        <th>Waktu Shift Selesai</th>
+                                        <th>Dibuat Oleh</th>
+                                        <th>Diupdate Oleh</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($supplier as $sup)
+                                    @foreach ($shift as $s)
                                     <tr>
                                         <td>{{ $loop->iteration  }}</td>
-                                        <td>{{ $sup->name  }}</td>
-                                        <td>{{ $sup->email  }}</td>
-                                        <td>{{ $sup->phone  }}</td>
-                                        <td>{{ $sup->address  }}</td>
+                                        <td>{{ $s->shiftName  }}</td>
+                                        <td>{{ $s->start_time  }}</td>
+                                        <td>{{ $s->end_time  }}</td>
+                                        <td>{{ $s->createdBy  }}</td>
+                                        <td>{{ $s->updatedBy  }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -185,7 +187,7 @@
     <script src="https://cdn.datatables.net/2.2.1/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.2.1/js/dataTables.bootstrap5.js"></script>
     <script>
-        new DataTable('#dataTableCategory');
+        new DataTable('#dataTableUnit');
         
         function printInvoice() {
             var content = document.getElementById('printableArea').innerHTML;
