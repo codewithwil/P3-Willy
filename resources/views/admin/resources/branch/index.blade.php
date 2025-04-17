@@ -66,7 +66,7 @@
                                                 Edit
                                             </a>                                   
                                         @endif
-                                        @if(auth()->user()->hasRole(['admin']))
+                                        @if(auth()->user()->hasRole(['admin', 'supervisor']))
                                             <form action="{{ url('setting/branch/delete', $b->branchId) }}"
                                                  method="POST" 
                                                  style="display: inline;"

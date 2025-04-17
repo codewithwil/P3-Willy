@@ -36,6 +36,8 @@
                                     <option value="">Pilih Role</option>
                                     <option value="owner" selected>owner</option>
                                 </select>
+
+                                <input type="hidden" name="role" value="owner">
                             </div>                  
                         </div>
                         <div class="col-md-6">  

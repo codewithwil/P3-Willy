@@ -36,6 +36,7 @@
                                     <option value="">Pilih Role</option>
                                     <option value="pengguna" selected>Pengguna</option>
                                 </select>
+                                <input type="hidden" name="role" value="pengguna">
                             </div>                         
                         </div>
                         <div class="col-md-6">  

@@ -82,8 +82,6 @@
                                     <td>
                                         @if(auth()->user()->hasRole(['admin', 'supervisor']))
                                         <a href="{{ url('/people/owner/edit/' . $us->ownerId) }}" class="btn btn-primary">Edit</a>        
-                                        @endif
-                                        @if(auth()->user()->hasRole(['admin']) && auth()->user()->id !== $us->user_id)
                                             <form action="{{ url('people/owner/delete', $us->ownerId) }}" method="POST" style="display: inline;">
                                                 @csrf
                                                 @method('POST') 

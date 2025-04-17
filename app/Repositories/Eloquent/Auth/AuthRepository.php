@@ -16,14 +16,31 @@ class AuthRepository extends BaseRepositories implements AuthRepositoryContract{
         parent::__construct($user);    
     }
 
+
     public function register(array $data): object
     {
         $data['password'] = Hash::make($data['password']);
         unset($data['password_confirmation']);
-        $user = $this->create($data);
-        $user->assignRole('pengguna');
+    
+        $user = $this->create([
+            'email' => $data['email'],
+            'password' => $data['password'],
+            'branch_id' => $data['branch_id'] ?? null, 
+        ]);
+    
+        $user->assignRole('pengguna'); 
+    
+        $user->customer()->create([
+            'name' => $data['name'],
+            'telepon' => $data['telepon'] ?? 0,
+            'address' => $data['address'] ?? 'address',
+            'saldo' => 0, 
+            'foto' => 'default.png' 
+        ]);
+    
         return $user;
     }
+    
 
     public function login(string $email, string $password): array{
         $user = $this->findBy('email', $email);
