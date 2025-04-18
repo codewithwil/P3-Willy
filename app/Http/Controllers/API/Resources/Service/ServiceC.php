@@ -7,13 +7,25 @@ use App\Models\Resources\Branch\Branch;
 use App\Models\Resources\Company\Company;
 use App\Models\Resources\Service\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ServiceC extends Controller
 {
-    public function index(){
-        $service = Service::where('status', Service::STATUS_ACTIVE)->get();
+
+    public function index()
+    {
+        $user = Auth::user();
+    
+        if ($user->hasRole('admin') && $user->branch_id === null) {
+            $service = Service::where('status', Service::STATUS_ACTIVE)
+                ->with('branch')
+                ->get();
+        } else {
+            $service = Service::where('branch_id', Auth::user()->branch_id)->get();
+        }
+    
         return view('admin.resources.service.index', compact('service'));
     }
 

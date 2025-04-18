@@ -2,6 +2,7 @@
 
 namespace App\Models\People\Customers;
 
+use App\Models\Transactions\Saldo\SaldoHistories;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,4 +15,5 @@ class Customers extends Model
     ];
 
     public function user(){return $this->belongsTo(User::class, 'user_id', 'id');}
+    public function saldoHistories(){return $this->hasMany(SaldoHistories::class, 'customer_id', 'customerId');}
 }

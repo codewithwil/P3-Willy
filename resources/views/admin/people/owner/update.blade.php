@@ -52,18 +52,7 @@
                                     @endforeach
                                     </select>
                                     @endif
-                                </div>
-                                <div class="mb-3">
-                                    <label for="branch" class="form-label">Cabang</label>
-                                    <select name="branch_id" class="form-control" id="branch">
-                                        <option value="">--- Pilih Cabang ---</option>
-                                        @foreach ($branch as $b)
-                                            <option value="{{ $b->branchId }}" {{ $b->branchId == $users->user->branch_id ? 'selected' : '' }}>
-                                                {{ $b->branchName }}
-                                            </option>
-                                        @endforeach
-                                        </select>
-                                </div>              
+                                </div>         
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">

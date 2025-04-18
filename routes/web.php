@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\Auth\AuthC;
 use App\Http\Controllers\API\Dashboard\DashboardC;
 use App\Http\Controllers\API\Front\FrontC;
+use App\Http\Controllers\API\People\Customer\CustomerC;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -29,4 +30,5 @@ Route::middleware(['auth'])->group(function(){
     Route::group(["prefix" => "/configuration", "as" => "configuration."], __DIR__ . "/web/configuration/index.php");
     // Route::group(["prefix" => "/transactions", "as" => "transactions."], __DIR__ . "/web/transactions/index.php");
     Route::group(["prefix" => "/report", "as" => "report."], __DIR__ . "/web/report/index.php");
+    Route::group(["prefix" => "/front", "as" => "front."], __DIR__ . "/web/front/index.php");
 });

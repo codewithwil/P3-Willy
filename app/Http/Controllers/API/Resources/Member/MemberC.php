@@ -101,7 +101,6 @@ class MemberC extends Controller
                 }
             }
     
-            // Menghapus session setelah proses selesai
             session()->forget('user_id_to_register');
         }
         

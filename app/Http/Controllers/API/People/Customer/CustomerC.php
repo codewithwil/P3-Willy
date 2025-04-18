@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\People\Customers\Customers;
 use App\Models\Resources\Branch\Branch;
 use App\Models\Resources\Company\Company;
+use App\Models\Transactions\Saldo\SaldoHistories;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Midtrans\Config;
+use Midtrans\Snap;
 use Spatie\Permission\Models\Role;
 
 class CustomerC extends Controller
@@ -42,9 +45,14 @@ class CustomerC extends Controller
         return view('admin.people.customer.invoice', compact('users', 'company'));
     }
 
-    public function edit($ownerId)
+    public function profile($customerId){
+        $users = Customers::with('user')->findOrFail($customerId);
+        return view('front.profile.index', compact('users'));
+    }
+
+    public function edit($customerId)
     {
-        $users = Customers::with('user')->findOrFail($ownerId);
+        $users = Customers::with('user')->findOrFail($customerId);
         $roles = Role::all(); 
         $branch = Branch::all(); 
         $userRole = $users->user->getRoleNames()->first(); 
@@ -113,7 +121,7 @@ class CustomerC extends Controller
     
 
 
-    public function update(Request $request, $ownerId)
+    public function update(Request $request, $customerId)
     {
         $request->validate([
             'email'     => 'nullable|email',
@@ -127,7 +135,7 @@ class CustomerC extends Controller
     
         DB::beginTransaction();
         try {
-            $customer = Customers::findOrFail($ownerId);
+            $customer = Customers::findOrFail($customerId);
             $user  = $customer->user;
     
             if ($request->filled('email')) {
@@ -166,12 +174,63 @@ class CustomerC extends Controller
         }
     }
     
+    public function profileUpdate(Request $request, $customerId)
+    {
+        $request->validate([
+            'email'     => 'nullable|email',
+            'name'      => 'nullable|string|max:255',
+            'telepon'   => 'nullable|digits_between:10,15',
+            'password'  => 'nullable|min:8',
+            'foto'      => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'address'      => 'nullable|string|max:255',
+        ]);
     
-    public function delete($ownerId)
+        DB::beginTransaction();
+        try {
+            $customer = Customers::findOrFail($customerId);
+            $user  = $customer->user;
+    
+            if ($request->filled('email')) {
+                $user->email = $request->email;
+            }
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
+            }
+            $user->branch_id = $request->branch_id;
+            $user->save();
+    
+            if ($request->filled('role')) {
+                $user->syncRoles($request->role);
+            }
+    
+            if ($request->hasFile('foto')) {
+                if ($customer->foto && Storage::exists('public/' . $customer->foto)) {
+                    Storage::delete('public/' . $customer->foto);
+                }
+    
+                $file     = $request->file('foto');
+                $fotoPath = $file->store('customer_foto', 'public');  
+                $customer->foto = $fotoPath;  
+            }
+    
+            $customer->name    = $request->name;
+            $customer->telepon = $request->telepon;
+            $customer->address    = $request->address;
+            $customer->save();
+    
+            DB::commit();
+            return redirect()->back()->with('success', 'Data profile berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+    
+    public function delete($customerId)
     {
         DB::beginTransaction();
         try {
-            $customer = Customers::findOrFail($ownerId);
+            $customer = Customers::findOrFail($customerId);
             $user = $customer->user;
             $user->roles()->detach();
             if ($customer->foto && Storage::exists('public/' . $customer->foto)) {
@@ -193,4 +252,99 @@ class CustomerC extends Controller
             return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+
+    public function topup($customerId){
+        $users = Customers::with('user')->findOrFail($customerId);
+        return view('front.topup.index', compact('users'));
+    }
+
+    public function topupStore(Request $request)
+    {
+        Config::$serverKey = config('services.midtrans.server_key');
+        Config::$isProduction = false;
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+    
+        $order_id = 'invoice-' . time();
+        $transaction_details = [
+            'order_id' => $order_id,
+            'gross_amount' => 50000,
+        ];
+    
+        $customer_details = [
+            'first_name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->telepon,
+        ];
+    
+        $item_details = [[
+            'id' => 'item-1',
+            'price' => $request->amount,
+            'quantity' => 1,
+            'name' => 'Top Up saldo',
+        ]];
+    
+        $userId = $request->Id; 
+
+        $transaction_data = [
+            'transaction_details' => $transaction_details,
+            'customer_details' => $customer_details,
+            'item_details' => $item_details,
+            'custom_fields' => [
+                'custom_field1' => $userId,
+            ],
+        ];
+    
+        try {
+            session([
+                'user_id_to_register' => $userId,
+                'topup_amount' => $request->amount, 
+            ]); 
+            $snapToken = Snap::getSnapToken($transaction_data);
+            return view('front.topup.payment', compact('snapToken'));
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal membuat transaksi: ' . $e->getMessage());
+        }
+    }
+
+    public function success()
+    {
+        $userId = session('user_id_to_register');
+        $amount = session('topup_amount');
+    
+        $customer = Customers::where('user_id', $userId)->first();
+    
+        DB::beginTransaction();
+        try {
+            if ($customer) {
+                SaldoHistories::create([
+                    'customer_id' => $customer->customerId,
+                    'amount'      => $amount,
+                    'type'        => SaldoHistories::TYPE_DEPOSIT,
+                    'description' => 'Top up saldo via Midtrans',
+                ]);
+    
+                $customer->saldo += $amount;
+                $customer->save();
+            }
+    
+            DB::commit();
+    
+            session()->forget(['user_id_to_register', 'topup_amount']);
+    
+            return view('front.topup.success');
+    
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->with('error', 'Terjadi kesalahan saat menyimpan top up: ' . $e->getMessage());
+        }
+    }
+
+    public function historySaldo($customerId)
+    {
+        $users = Customers::with('saldoHistories')->findOrFail($customerId);
+        return view('front.topup.history', compact('users'));
+    }
+    
+    
 }

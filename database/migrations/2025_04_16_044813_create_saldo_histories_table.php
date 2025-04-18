@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('saldo_histories', function (Blueprint $table) {
-            $table->id();
+            $table->id('saldoHistId');
             $table->unsignedBigInteger('customer_id');
-            $table->decimal('amount', 65, 30);  
-            $table->enum('type', ['deposit', 'withdrawal']);  
+            $table->decimal('amount', 12, 2);  
+            $table->tinyInteger('type');  
             $table->string('description')->nullable();  
             $table->timestamps();
 
