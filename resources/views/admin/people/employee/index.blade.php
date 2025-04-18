@@ -51,7 +51,6 @@
                                     <th>Nomor Telepon</th>
                                     <th>Alamat</th>
                                     <th>Jenis Kelamin</th>
-                                    <th>Level</th>
                                     @if(auth()->user()->hasRole(['admin', 'supervisor']))
                                     <th>Aksi</th>
                                     @endif
@@ -76,11 +75,6 @@
                                     <td>{{ $us->telepon ?? 'phone not set' }}</td>
                                     <td>{{ $us->address ?? 'address not set' }}</td>
                                     <td>{{ $us->gender_label }}</td>
-                                    <td>
-                                        @foreach ($us->user->roles as $role)
-                                            {{ $role->name }}
-                                        @endforeach
-                                    </td>
                                     <td>
                                         @if(auth()->user()->hasRole(['admin', 'supervisor']))
                                         <a href="{{ url('/people/employee/edit/' . $us->employeeId) }}" class="btn btn-primary">Edit</a>        

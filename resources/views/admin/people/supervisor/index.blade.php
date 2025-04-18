@@ -49,7 +49,6 @@
                                     <th>Nama</th>
                                     <th>Email</th>
                                     <th>Nomor Telepon</th>
-                                    <th>Level</th>
                                     @if(auth()->user()->hasRole(['admin', 'supervisor']))
                                     <th>Aksi</th>
                                     @endif
@@ -72,11 +71,6 @@
                                     <td>{{ $us->name  }}</td>
                                     <td>{{ $us->user->email }}</td>
                                     <td>{{ $us->telepon ?? 'phone not set' }}</td>
-                                    <td>
-                                        @foreach ($us->user->roles as $role)
-                                            {{ $role->name }}
-                                        @endforeach
-                                    </td>
                                     <td>
                                         @if(auth()->user()->hasRole(['admin', 'supervisor']))
                                         <a href="{{ url('/people/supervisor/edit/' . $us->supervisorId) }}" class="btn btn-primary">Edit</a>        

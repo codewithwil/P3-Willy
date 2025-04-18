@@ -50,7 +50,6 @@
                                     <th>Email</th>
                                     <th>Nomor Telepon</th>
                                     <th>Alamat</th>
-                                    <th>Level</th>
                                     <th>Saldo</th>
                                     @if(auth()->user()->hasRole(['admin', 'supervisor']))
                                     <th>Aksi</th>
@@ -75,11 +74,6 @@
                                     <td>{{ $us->user->email }}</td>
                                     <td>{{ $us->telepon ?? 'phone not set' }}</td>
                                     <td>{{ $us->address ?? 'address not set' }}</td>
-                                    <td>
-                                        @foreach ($us->user->roles as $role)
-                                        {{ $role->name }}
-                                        @endforeach
-                                    </td>
                                     <td>Rp {{ number_format($us->saldo, 0, ',', '.')}}</td>
                                     <td>
                                         @if(auth()->user()->hasRole(['admin', 'supervisor']))

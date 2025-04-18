@@ -152,22 +152,22 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Nama Shift</th>
-                                        <th>Waktu Shift Mulai</th>
-                                        <th>Waktu Shift Selesai</th>
-                                        <th>Dibuat Oleh</th>
-                                        <th>Diupdate Oleh</th>
+                                        <th>Nama Perusahaan</th>
+                                        <th>Email Cabang</th>
+                                        <th>Nomor Telepon</th>
+                                        <th>Alamat Cabang</th>
+                                        <th>Jam operasional</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($shift as $s)
+                                    @foreach ($branch as $b)
                                     <tr>
                                         <td>{{ $loop->iteration  }}</td>
-                                        <td>{{ $s->shiftName  }}</td>
-                                        <td>{{ $s->start_time  }}</td>
-                                        <td>{{ $s->end_time  }}</td>
-                                        <td>{{ $s->createdBy  }}</td>
-                                        <td>{{ $s->updatedBy  }}</td>
+                                        <td>{{ $b->company->name  }}</td>
+                                        <td>{{ $b->email  }}</td>
+                                        <td>{{ $b->phone  }}</td>
+                                        <td>{{ $b->address  }}</td>
+                                        <td>{{ $b->operationalHours  }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

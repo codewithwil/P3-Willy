@@ -152,22 +152,32 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Nama Shift</th>
-                                        <th>Waktu Shift Mulai</th>
-                                        <th>Waktu Shift Selesai</th>
-                                        <th>Dibuat Oleh</th>
-                                        <th>Diupdate Oleh</th>
+                                        <th>Kode Promo</th>
+                                        <th>Nama Promo</th>
+                                        <th>Tanggal Mulai</th>
+                                        <th>Tanggal Berakhir</th>
+                                        <th>Jenis Promo</th>
+                                        <th>Jumlah Promo</th>
+                                        <th>Promo Ditujukan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($shift as $s)
+                                    @foreach ($promo as $b)
                                     <tr>
                                         <td>{{ $loop->iteration  }}</td>
-                                        <td>{{ $s->shiftName  }}</td>
-                                        <td>{{ $s->start_time  }}</td>
-                                        <td>{{ $s->end_time  }}</td>
-                                        <td>{{ $s->createdBy  }}</td>
-                                        <td>{{ $s->updatedBy  }}</td>
+                                        <td>{{ $b->promoCode  }}</td>
+                                        <td>{{ $b->promoName  }}</td>
+                                        <td>{{ $b->startDate  }}</td>
+                                        <td>{{ $b->endDate  }}</td>
+                                        <td>{{ $b->type_label  }}</td>
+                                        <td>
+                                            @if ($b->typePromo == 1)
+                                                {{ $b->amountPromo }}%  
+                                            @elseif ($b->typePromo == 2)
+                                                Rp{{ number_format($b->amountPromo, 0, ',', '.') }}  
+                                            @endif
+                                        </td>
+                                        <td>{{ $b->target_label }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

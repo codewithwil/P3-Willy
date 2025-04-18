@@ -152,22 +152,25 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Nama Shift</th>
-                                        <th>Waktu Shift Mulai</th>
-                                        <th>Waktu Shift Selesai</th>
-                                        <th>Dibuat Oleh</th>
-                                        <th>Diupdate Oleh</th>
+                                        <th>Cabang</th>
+                                        <th>Nama Layanan</th>
+                                        <th>Harga Perunit</th>
+                                        <th>Satuan</th>
+                                        <th>Jumlah minimal</th>
+                                        <th>Deksripsi</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($shift as $s)
+                                    @foreach ($service as $s)
                                     <tr>
                                         <td>{{ $loop->iteration  }}</td>
-                                        <td>{{ $s->shiftName  }}</td>
-                                        <td>{{ $s->start_time  }}</td>
-                                        <td>{{ $s->end_time  }}</td>
-                                        <td>{{ $s->createdBy  }}</td>
-                                        <td>{{ $s->updatedBy  }}</td>
+                                        <td>{{ $s->branch->address  }}</td>
+                                        <td>{{ $s->name  }}</td>
+                                        <td>{{ $s->pricePerUnit  }}</td>
+                                        <td>{{ $s->unitType  }}</td>
+                                        <td>{{ $s->minQuantity  }}</td>
+                                        <td>{{ $s->description  }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>

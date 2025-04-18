@@ -152,26 +152,40 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
+                                        <th>Foto</th>
                                         <th>Nama</th>
                                         <th>Email</th>
                                         <th>Nomor Telepon</th>
                                         <th>Alamat</th>
-                                        <th>Level</th>
+                                        <th>Jenis Kelamin</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($users as $us)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $us->name }}</td>
-                                        <td>{{ $us->email }}</td>
-                                        <td>{{ $us->phone ?? 'phone not set' }}</td>
-                                        <td>{{ $us->address ?? 'address not set' }}</td>
-                                        <td>
-                                            @foreach ($us->roles as $role)
-                                                {{ $role->name }}
-                                            @endforeach
-                                        </td>
+                                        @foreach ($users as $us)
+                                        <tr>
+                                            <td>{{ $loop->iteration  }}</td>
+                                            <td>
+                                                @if($us->foto)
+                                                <img src="{{ asset('storage/' . $us->foto) }}" alt="Foto" 
+                                                class="rounded-circle" 
+                                                style="width: 100px; height: 100px; object-fit: cover;">
+                                           
+                                                @else
+                                                    <span class="text-muted">Tidak ada foto</span>
+                                                @endif
+                                            </td>                                    
+                                            <td>{{ $us->name  }}</td>
+                                            <td>{{ $us->user->email }}</td>
+                                            <td>{{ $us->telepon ?? 'phone not set' }}</td>
+                                            <td>{{ $us->address ?? 'address not set' }}</td>
+                                            <td>{{ $us->gender_label }}</td>
+                                            <td>
+                                                @foreach ($us->user->roles as $role)
+                                                    {{ $role->name }}
+                                                @endforeach
+                                            </td>
                                     </tr>
                                     @endforeach
                                 </tbody>

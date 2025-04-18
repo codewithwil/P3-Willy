@@ -156,22 +156,25 @@
                                         <th>Nama</th>
                                         <th>Email</th>
                                         <th>Nomor Telepon</th>
-                                        <th>Level</th>
-                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($users as $us)
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $us->name }}</td>
-                                        <td>{{ $us->email }}</td>
-                                        <td>{{ $us->telepon ?? 'phone not set' }}</td>
+                                        <td>{{ $loop->iteration  }}</td>
                                         <td>
-                                            @foreach ($us->user->roles as $role)
-                                                {{ $role->name }}
-                                            @endforeach
-                                        </td>
+                                            @if($us->foto)
+                                            <img src="{{ asset('storage/' . $us->foto) }}" alt="Foto" 
+                                            class="rounded-circle" 
+                                            style="width: 100px; height: 100px; object-fit: cover;">
+                                       
+                                            @else
+                                                <span class="text-muted">Tidak ada foto</span>
+                                            @endif
+                                        </td>                                    
+                                        <td>{{ $us->name  }}</td>
+                                        <td>{{ $us->user->email }}</td>
+                                        <td>{{ $us->telepon ?? 'phone not set' }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
