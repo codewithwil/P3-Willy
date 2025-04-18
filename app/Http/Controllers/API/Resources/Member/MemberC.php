@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\People\Customers\Customers;
 use App\Models\Resources\Company\Company;
 use App\Models\Resources\Member\Member;
+use App\Models\Transactions\Saldo\SaldoHistories;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Midtrans\Config;
 use Midtrans\Snap;
@@ -72,7 +74,10 @@ class MemberC extends Controller
         ];
     
         try {
-            session(['user_id_to_register' => $userId]); 
+            session([
+                'user_id_to_register' => $userId,
+                'topup_amount' => 50000, 
+            ]); 
             $snapToken = Snap::getSnapToken($transaction_data);
             return view('front.member.payment', compact('snapToken'));
         } catch (\Exception $e) {
@@ -83,27 +88,40 @@ class MemberC extends Controller
     public function success()
     {
         $userId = session('user_id_to_register');
-        
+        $amount = session('topup_amount');
+    
         if ($userId) {
-            $existingMember = Member::where('user_id', $userId)->first();
-        
-            if (!$existingMember) {
-                Member::create([
-                    'user_id' => $userId,
-                    'dateJoin' => Carbon::now(),
-                ]);
-                
-                $customer = Customers::where('user_id', $userId)->first();
-                
-                if ($customer) {
-                    $customer->saldo += 50000; 
+            DB::beginTransaction();
+            try {
+                $existingMember = Member::where('user_id', $userId)->first();
+                $customer       = Customers::where('user_id', $userId)->first();
+    
+                if (!$existingMember && $customer) {
+                    Member::create([
+                        'user_id'  => $userId,
+                        'dateJoin' => Carbon::now(),
+                    ]);
+    
+                    SaldoHistories::create([
+                        'customer_id' => $customer->customerId,
+                        'amount'      => $amount,
+                        'type'        => SaldoHistories::TYPE_DEPOSIT,
+                        'description' => 'Daftar Member via Midtrans',
+                    ]);
+    
+                    $customer->saldo += $amount;
                     $customer->save();
                 }
-            }
     
-            session()->forget('user_id_to_register');
+                DB::commit();
+                session()->forget(['user_id_to_register', 'topup_amount']);
+    
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return back()->with('error', 'Gagal menyelesaikan proses pendaftaran: ' . $e->getMessage());
+            }
         }
-        
+    
         return view('front.member.success');
     }
     
