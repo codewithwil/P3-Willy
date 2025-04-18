@@ -41,6 +41,18 @@ class Promo extends Model
         return $labels[$this->typePromo] ?? 'Tidak Diketahui';
     }
     
+    public function getTargetLabelAttribute()
+    {
+        if ($this->target_audience == self::TARGET_MEMBER) {
+            return 'Member';
+        } elseif ($this->target_audience == self::TARGET_BRANCH) {
+            return $this->branch ? 'Cabang - ' . $this->branch->address : 'Cabang (Tidak Diketahui)';
+        }
+    
+        return 'Tidak Diketahui';
+    }
+    
+
     public function branch(){return $this->belongsTo(Branch::class, 'branch_id', 'branchId');}
     
 }

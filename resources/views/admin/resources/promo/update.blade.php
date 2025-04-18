@@ -46,8 +46,8 @@
                                         <label for="target_audience" class="form-label">Target Diskon</label>
                                         <select name="target_audience" id="target_audience" class="form-control" onchange="toggleBranchVisibility()">
                                             <option value="">--- Pilih Target Diskon ---</option>
-                                            <option value="1" @if($promo->target_audience == 1) selected @endif>Cabang</option>
-                                            <option value="2" @if($promo->target_audience == 2) selected @endif>Member</option>
+                                            <option value="1" @if($promo->target_audience == 1) selected @endif>Member</option>
+                                            <option value="2" @if($promo->target_audience == 2) selected @endif>Cabang</option>
                                         </select>                                        
                                     </div>
                                     
@@ -119,7 +119,7 @@
             let target_audience = document.getElementById('target_audience').value;
             let branchDiv = document.getElementById('branchDiv');
     
-            if (target_audience == '1') {
+            if (target_audience == '2') {
                 branchDiv.style.display = 'block';  
             } else {
                 branchDiv.style.display = 'none';  

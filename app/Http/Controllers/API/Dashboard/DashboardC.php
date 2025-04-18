@@ -13,9 +13,6 @@ class DashboardC extends Controller
 {
     public function index(){
         $users         = User::count();
-        $commodity     = Commodity::where('status', Commodity::STATUS_ACTIVE)->count();
-        $rooms         = Room::where('roomStatus', Room::STATUS_ACTIVE)->count();
-        $reportTransac = StockTransac::count();
-        return view('admin.dashboard.index', compact('users', 'commodity', 'rooms', 'reportTransac'));
+        return view('admin.dashboard.index', compact('users'));
     }
 }

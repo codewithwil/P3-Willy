@@ -4,6 +4,7 @@ namespace App\Models\Resources\Branch;
 
 use App\Models\Resources\Company\Company;
 use App\Models\Resources\Promo\Promo;
+use App\Models\Resources\Service\Service;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,5 +21,6 @@ class Branch extends Model
 
     public function users(){return $this->hasMany(User::class, 'branch_id', 'branchId');}
     public function promo(){return $this->hasMany(Promo::class, 'branch_id', 'branchId');}
+    public function service(){return $this->hasMany(Service::class, 'branch_id', 'branchId');}
     public function company(){return $this->belongsTo(Company::class, 'company_id', 'companyId');}
 }

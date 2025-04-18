@@ -1,5 +1,5 @@
 @extends('admin.template.template')
-@section('title', 'Promo')
+@section('title', 'Layanan')
 
 @section('content')
 @push('css')
@@ -10,12 +10,12 @@
 <div class="app-content-header">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-6"><h3 class="mb-0">Data Promo</h3></div>
+            <div class="col-sm-6"><h3 class="mb-0">Data Layanan</h3></div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                     <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
                     <li class="breadcrumb-item">Setting</li>
-                    <li class="breadcrumb-item active" aria-current="page">Promo</li>
+                    <li class="breadcrumb-item active" aria-current="page">Layanan</li>
                 </ol>
             </div>
         </div>
@@ -26,13 +26,13 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card mb-4">
-                    <div class="card-header"><h3 class="card-title">Promo</h3></div>
+                    <div class="card-header"><h3 class="card-title">Layanan</h3></div>
                     <div class="col-12 d-flex">
                         @if(auth()->user()->hasRole(['admin', 'supervisor']))
-                        <a href="{{ url('setting/promo/create') }}" class="btn btn-primary ms-3 mt-3">
+                        <a href="{{ url('setting/service/create') }}" class="btn btn-primary ms-3 mt-3">
                             Tambah
                         </a>
-                        <a href="{{ url('setting/promo/invoice') }}" class="btn btn-warning ms-3 mt-3">
+                        <a href="{{ url('setting/service/invoice') }}" class="btn btn-warning ms-3 mt-3">
                             Invoice
                         </a>
                         @endif
@@ -42,43 +42,34 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kode Promo</th>
-                                    <th>Nama Promo</th>
-                                    <th>Tanggal Mulai</th>
-                                    <th>Tanggal Berakhir</th>
-                                    <th>Jenis Promo</th>
-                                    <th>Jumlah Promo</th>
-                                    <th>Promo Ditujukan</th>
+                                    <th>Cabang</th>
+                                    <th>Nama Layanan</th>
+                                    <th>Harga Perunit</th>
+                                    <th>Satuan</th>
+                                    <th>Jumlah minimal</th>
+                                    <th>Deksripsi</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($promo as $b)
+                                @foreach ($service as $s)
                                 <tr>
                                     <td>{{ $loop->iteration  }}</td>
-                                    <td>{{ $b->promoCode  }}</td>
-                                    <td>{{ $b->promoName  }}</td>
-                                    <td>{{ $b->startDate  }}</td>
-                                    <td>{{ $b->endDate  }}</td>
-                                    <td>{{ $b->type_label  }}</td>
-                                    <td>
-                                        @if ($b->typePromo == 1)
-                                            {{ $b->amountPromo }}%  
-                                        @elseif ($b->typePromo == 2)
-                                            Rp{{ number_format($b->amountPromo, 0, ',', '.') }}  
-                                        @endif
-                                    </td>
-                                    <td>{{ $b->target_label }}</td>
-                                    
+                                    <td>{{ $s->branch->address  }}</td>
+                                    <td>{{ $s->name  }}</td>
+                                    <td>{{ $s->pricePerUnit  }}</td>
+                                    <td>{{ $s->unitType  }}</td>
+                                    <td>{{ $s->minQuantity  }}</td>
+                                    <td>{{ $s->description  }}</td>
                                     <td>
                                         @if(auth()->user()->hasRole(['admin', 'supervisor', 'petugas']))
-                                            <a href="{{ url('/setting/promo/edit/' . $b->promoId) }}" 
+                                            <a href="{{ url('/setting/service/edit/' . $s->serviceId) }}" 
                                                 class="btn btn-primary">
                                                 Edit
                                             </a>                                   
                                         @endif
                                         @if(auth()->user()->hasRole(['admin', 'supervisor']))
-                                            <form action="{{ url('setting/promo/delete', $b->promoId) }}"
+                                            <form action="{{ url('setting/service/delete', $s->serviceId) }}"
                                                  method="POST" 
                                                  style="display: inline;"
                                             >

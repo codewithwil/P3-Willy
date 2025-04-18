@@ -15,13 +15,29 @@ class PromoC extends Controller
 {
     public function index()
     {
-        if (Auth::user()->hasRole('admin') && Auth::user()->branch_id === null) {
-            $promo = Promo::where('status', Promo::STATUS_ACTIVE)->with('branch')->get();
+        // Ambil user yang login
+        $user = Auth::user();
+    
+        if ($user->hasRole('admin') && $user->branch_id === null) {
+            $promo = Promo::where('status', Promo::STATUS_ACTIVE)
+                ->with('branch')
+                ->get();
         } else {
-            $promo = Promo::where('branch_id', Auth::user()->branch_id)->where('status', Promo::STATUS_ACTIVE)->get();
+            $promo = Promo::where('status', Promo::STATUS_ACTIVE)
+                ->where(function ($query) use ($user) {
+                    $query->where('target_audience', Promo::TARGET_MEMBER)
+                          ->orWhere(function ($q) use ($user) {
+                              $q->where('target_audience', Promo::TARGET_BRANCH)
+                                ->where('branch_id', $user->branch_id);
+                          });
+                })
+                ->with('branch')
+                ->get();
         }
+    
         return view('admin.resources.promo.index', compact('promo'));
     }
+    
 
     public function invoice(){
         $promo    = Promo::where('status', Promo::STATUS_ACTIVE)->get();

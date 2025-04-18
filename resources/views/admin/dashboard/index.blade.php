@@ -25,7 +25,7 @@
           <!--begin::Small Box Widget 1-->
           <div class="small-box text-bg-primary">
             <div class="inner">
-              <h3>{{ $commodity }}</h3>
+              {{-- <h3>{{ $commodity }}</h3> --}}
               <p>Barang</p>
             </div>
             <svg
@@ -53,7 +53,7 @@
           <!--begin::Small Box Widget 2-->
           <div class="small-box text-bg-success">
             <div class="inner">
-              <h3>{{ $rooms }}<sup class="fs-5">%</sup></h3>
+              {{-- <h3>{{ $rooms }}<sup class="fs-5">%</sup></h3> --}}
               <p>Ruangan</p>
             </div>
             <svg
@@ -109,7 +109,7 @@
           <!--begin::Small Box Widget 4-->
           <div class="small-box text-bg-danger">
             <div class="inner">
-              <h3>{{ $reportTransac }}</h3>
+              {{-- <h3>{{ $reportTransac }}</h3> --}}
               <p>Transaksi Stok</p>
             </div>
             <svg

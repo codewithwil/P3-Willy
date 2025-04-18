@@ -46,7 +46,7 @@
                 <i class="nav-arrow bi bi-chevron-right"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview">
+            {{-- <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="{{ url('transactions/commodities') }}" class="nav-link">
                   <i class="nav-icon bi bi-circle"></i>
@@ -59,7 +59,7 @@
                   <p>Loundry</p>
                 </a>
               </li>
-            </ul>
+            </ul> --}}
           </li>
           @if(auth()->user()->hasRole(['admin', 'supervisor', 'petugas']))
           <li class="nav-header">Setting</li>
@@ -91,7 +91,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="{{ url('configuration/typeVehicle') }}" class="nav-link">
+                <a href="{{ url('setting/service') }}" class="nav-link">
                   <i class="nav-icon bi bi-circle"></i>
                   <p>Layanan</p>
                 </a>
