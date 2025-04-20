@@ -152,10 +152,7 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Nama</th>
                                         <th>Email</th>
-                                        <th>Nomor Telepon</th>
-                                        <th>Alamat</th>
                                         <th>Level</th>
                                     </tr>
                                 </thead>
@@ -163,10 +160,7 @@
                                     @foreach ($users as $us)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $us->name }}</td>
                                         <td>{{ $us->email }}</td>
-                                        <td>{{ $us->phone ?? 'phone not set' }}</td>
-                                        <td>{{ $us->address ?? 'address not set' }}</td>
                                         <td>
                                             @foreach ($us->roles as $role)
                                                 {{ $role->name }}

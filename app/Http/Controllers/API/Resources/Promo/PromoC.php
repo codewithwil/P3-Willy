@@ -15,7 +15,6 @@ class PromoC extends Controller
 {
     public function index()
     {
-        // Ambil user yang login
         $user = Auth::user();
     
         if ($user->hasRole('admin') && $user->branch_id === null) {

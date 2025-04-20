@@ -42,6 +42,43 @@ class BranchC extends Controller
         return view('admin.resources.branch.update', compact('branch', 'company'));
     }
 
+    public function nearest(Request $request)
+    {
+        $userLat = $request->latitude;
+        $userLng = $request->longitude;
+
+        $branches = Branch::where('status', 1)->get();
+
+        $nearest = null;
+        $minDistance = INF;
+
+        foreach ($branches as $branch) {
+            $distance = $this->haversine($userLat, $userLng, $branch->ltd, $branch->lng);
+            if ($distance < $minDistance) {
+                $minDistance = $distance;
+                $nearest = $branch;
+            }
+        }
+
+        return response()->json([
+            'branch' => $nearest,
+            'distance_km' => round($minDistance, 2)
+        ]);
+    }
+
+    private function haversine($lat1, $lon1, $lat2, $lon2)
+    {
+        $earthRadius = 6371; 
+        $dLat = deg2rad($lat2 - $lat1);
+        $dLon = deg2rad($lon2 - $lon1);
+
+        $a = sin($dLat/2) * sin($dLat/2) +
+            cos(deg2rad($lat1)) * cos(deg2rad($lat2)) *
+            sin($dLon/2) * sin($dLon/2);
+
+        $c = 2 * atan2(sqrt($a), sqrt(1-$a));
+        return $earthRadius * $c;
+    }
 
     public function store(Request $req)
     {

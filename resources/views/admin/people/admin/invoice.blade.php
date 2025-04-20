@@ -155,7 +155,6 @@
                                         <th>Nama</th>
                                         <th>Email</th>
                                         <th>Nomor Telepon</th>
-                                        <th>Level</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -163,13 +162,8 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $us->name }}</td>
-                                        <td>{{ $us->email }}</td>
+                                        <td>{{ $us->user->email }}</td>
                                         <td>{{ $us->telepon ?? 'phone not set' }}</td>
-                                        <td>
-                                            @foreach ($us->roles as $role)
-                                                {{ $role->name }}
-                                            @endforeach
-                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>

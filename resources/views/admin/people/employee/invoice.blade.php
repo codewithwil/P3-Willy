@@ -111,7 +111,7 @@
 <div class="app-content-header">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-6"><h3 class="mb-0">Invoice User</h3></div>
+            <div class="col-sm-6"><h3 class="mb-0">Invoice Petugas</h3></div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                     <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
@@ -163,29 +163,22 @@
                                 <tbody>
                                     @foreach ($users as $us)
                                     <tr>
-                                        @foreach ($users as $us)
-                                        <tr>
-                                            <td>{{ $loop->iteration  }}</td>
-                                            <td>
-                                                @if($us->foto)
-                                                <img src="{{ asset('storage/' . $us->foto) }}" alt="Foto" 
-                                                class="rounded-circle" 
-                                                style="width: 100px; height: 100px; object-fit: cover;">
-                                           
-                                                @else
-                                                    <span class="text-muted">Tidak ada foto</span>
-                                                @endif
-                                            </td>                                    
-                                            <td>{{ $us->name  }}</td>
-                                            <td>{{ $us->user->email }}</td>
-                                            <td>{{ $us->telepon ?? 'phone not set' }}</td>
-                                            <td>{{ $us->address ?? 'address not set' }}</td>
-                                            <td>{{ $us->gender_label }}</td>
-                                            <td>
-                                                @foreach ($us->user->roles as $role)
-                                                    {{ $role->name }}
-                                                @endforeach
-                                            </td>
+                                        <td>{{ $loop->iteration  }}</td>
+                                        <td>
+                                            @if($us->foto)
+                                            <img src="{{ asset('storage/' . $us->foto) }}" alt="Foto" 
+                                            class="rounded-circle" 
+                                            style="width: 100px; height: 100px; object-fit: cover;">
+                                       
+                                            @else
+                                                <span class="text-muted">Tidak ada foto</span>
+                                            @endif
+                                        </td>                                    
+                                        <td>{{ $us->name  }}</td>
+                                        <td>{{ $us->user->email }}</td>
+                                        <td>{{ $us->telepon ?? 'phone not set' }}</td>
+                                        <td>{{ $us->address ?? 'address not set' }}</td>
+                                        <td>{{ $us->gender_label }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
