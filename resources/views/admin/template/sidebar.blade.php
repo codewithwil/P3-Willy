@@ -46,20 +46,14 @@
                 <i class="nav-arrow bi bi-chevron-right"></i>
               </p>
             </a>
-            {{-- <ul class="nav nav-treeview">
+            <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="{{ url('transactions/commodities') }}" class="nav-link">
+                <a href="{{ url('transactions/order/') }}" class="nav-link">
                   <i class="nav-icon bi bi-circle"></i>
-                  <p>Member</p>
+                  <p>Pesanan Jasa</p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="{{ url('transactions/loanings') }}" class="nav-link">
-                  <i class="nav-icon bi bi-circle"></i>
-                  <p>Loundry</p>
-                </a>
-              </li>
-            </ul> --}}
+            </ul>
           </li>
           @if(auth()->user()->hasRole(['admin', 'supervisor', 'petugas']))
           <li class="nav-header">Setting</li>
@@ -100,16 +94,6 @@
             </ul>
           </li>
          
-          <li class="nav-header">Laporan</li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">
-              <i class="nav-icon bi bi-file-x"></i>
-              <p>
-                Laporan
-                <i class="nav-arrow bi bi-chevron-right"></i>
-              </p>
-            </a>
-          </li>
           @endif
           <li class="nav-header">Konfigurasi aplikasi</li>
           <li class="nav-item">

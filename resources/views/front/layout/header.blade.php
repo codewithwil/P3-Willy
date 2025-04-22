@@ -17,6 +17,7 @@
             <li><a class="dropdown-item" href="{{url('/front/profile/'. Auth::user()->customer->customerId)}}">Profil Saya</a></li>
             <li><a class="dropdown-item" href="{{url('/front/profile/topup/'. Auth::user()->customer->customerId)}}">Top Up Saldo</a></li>
             <li><a class="dropdown-item" href="{{url('/front/profile/historySaldo/'. Auth::user()->customer->customerId)}}">History Saldo</a></li>
+            <li><a class="dropdown-item" href="{{url('/transactions/order/'. Auth::user()->customer->customerId)}}">Pesanan Saya</a></li>
             <li>
               <form action="{{ route('logout') }}" method="GET" class="d-inline">
                 @csrf

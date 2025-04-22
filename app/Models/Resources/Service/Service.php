@@ -3,6 +3,7 @@
 namespace App\Models\Resources\Service;
 
 use App\Models\Resources\Branch\Branch;
+use App\Models\Transactions\ServiceTransac\ServiceTransac;
 use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
@@ -17,6 +18,7 @@ class Service extends Model
     ];
 
     public function branch(){return $this->belongsTo(Branch::class, 'branch_id', 'branchId');}
+    public function serviceTransac(){return $this->hasMany(ServiceTransac::class, 'service_id', 'serviceId');}
     
     public function getStatusLabelAttribute()
     {

@@ -66,6 +66,28 @@ class BranchC extends Controller
         ]);
     }
 
+    public function distanceToBranch(Request $request)
+    {
+        $request->validate([
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'branch_id' => 'required|exists:branches,branchId',
+        ]);
+
+        $userLat = $request->latitude;
+        $userLng = $request->longitude;
+
+        $branch = Branch::findOrFail($request->branch_id);
+
+        $distance = $this->haversine($userLat, $userLng, $branch->ltd, $branch->lng);
+
+        return response()->json([
+            'branch_id' => $branch->branchId,
+            'distance_km' => round($distance, 2),
+        ]);
+    }
+
+
     private function haversine($lat1, $lon1, $lat2, $lon2)
     {
         $earthRadius = 6371; 

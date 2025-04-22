@@ -143,21 +143,44 @@
           <ul class="mb-0 ps-3" style="font-size: 0.95rem;"></ul>
         </div>
         
+        <div class="mb-3">
+          <label for="deliveryOption" class="form-label fw-semibold">
+            <i class="bi bi-truck me-2"></i>Metode Pengantaran
+          </label>
+          <select class="form-select" id="deliveryOption">
+            <option value="1">Antar-Jemput</option>
+            <option value="2">Saya Akan Antar Sendiri</option>
+          </select>
+          <small class="text-muted">Gratis ongkir hingga 1 km. Lebih dari itu, Rp5.000/km.</small>
+        </div>
+        <p id="ongkirWrapper" class="mb-0" style="display: none;">
+          <strong>Biaya Pengantaran:</strong> <span id="previewOngkir">-</span>
+        </p>
+        
+        <div class="mb-3">
+          <label for="paymentMethod" class="form-label fw-semibold">
+            <i class="bi bi-credit-card-fill me-2"></i>Metode Pembayaran
+          </label>
+          <select class="form-select" id="paymentMethod" name="paymentMethod" required>
+            <option value="1">Bayar Tunai (Cash)</option>
+            <option value="2">Bayar Dari Saldo Akun</option>
+          </select>        
+        </div>
         <hr>
         <p class="fs-5"><strong>Total Estimasi:</strong> <span id="previewTotal" class="text-primary"></span></p>
       </div>
+
       <div class="modal-footer">
         <form id="orderForm" method="POST" action="">
           @csrf
-          <!-- tambahkan hidden inputs untuk bawa data ke backend -->
-          <input type="hidden" name="cabang" value="">
-          <input type="hidden" name="nama" value="">
-          <input type="hidden" name="telepon" value="">
-          <input type="hidden" name="alamat" value="">
-          <input type="hidden" name="layanan" value="">
-          <input type="hidden" name="minQuantity" value="">
+          <input type="hidden" name="customerId" value="{{Auth::user()->customer->customerId}}">
+          <input type="hidden" name="branchId" id="branchId">
+          <input type="hidden" name="serviceId" id="serviceId">          
           <input type="hidden" name="berat" value="">
           <input type="hidden" name="catatan" value="">
+          <input type="hidden" name="deliveryOption" value="">
+          <input type="hidden" name="ongkir" value="">
+          <input type="hidden" name="paymentMethod" value="">          
           <button type="submit" class="btn btn-success">Konfirmasi & Pesan</button>
         </form>
       </div>
@@ -172,11 +195,11 @@
 
 @push('js')
 <script>
-  // TARUH DI LUAR
+  let cabangSelect; 
   let availableServices = [];
 
   document.addEventListener('DOMContentLoaded', function () {
-    const cabangSelect = document.getElementById('cabang');
+    cabangSelect = document.getElementById('cabang');
     const layananSelect = document.getElementById('layanan');
     const cabangStatus = document.getElementById('cabang-status');
     const minQuantityInput = document.getElementById('minQuantity');
@@ -189,20 +212,24 @@
 
     cabangSelect.addEventListener('change', function () {
       const selectedBranchId = cabangSelect.value;
-      fetchServicesByBranch(selectedBranchId);
+      document.getElementById('branchId').value = selectedBranchId; 
+
+      fetchServicesByBranch(selectedBranchId, true);
     });
 
     layananSelect.addEventListener('change', function () {
-      const selectedServiceId = layananSelect.value;
+    const selectedServiceId = layananSelect.value;
+    document.getElementById('serviceId').value = selectedServiceId; 
 
-      const selectedService = availableServices.find(service => service.serviceId == selectedServiceId);
+    const selectedService = availableServices.find(service => service.serviceId == selectedServiceId);
 
-      if (selectedService) {
-        minQuantityInput.value = `${selectedService.minQuantity} ${selectedService.unitType}`;
-      } else {
-        minQuantityInput.value = '';
-      }
-    });
+    if (selectedService) {
+      minQuantityInput.value = `${selectedService.minQuantity} ${selectedService.unitType}`;
+    } else {
+      minQuantityInput.value = '';
+    }
+  });
+
 
     function showPosition(position) {
       const userLat = position.coords.latitude;
@@ -223,6 +250,7 @@
       .then(data => {
         if (data.branch) {
           const branchId = data.branch.branchId;
+          document.getElementById('branchId').value = branchId;
           const distance = data.distance_km;
 
           for (let i = 0; i < cabangSelect.options.length; i++) {
@@ -248,38 +276,70 @@
       });
     }
 
-    function fetchServicesByBranch(branchId) {
-      fetch('/front/data/getBranch', {
+    function fetchServicesByBranch(branchId, manualSelect = false) {
+  fetch('/front/data/getBranch', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRF-TOKEN': '{{ csrf_token() }}',
+    },
+    body: JSON.stringify({ branch_id: branchId })
+  })
+  .then(response => response.json())
+  .then(data => {
+    currentPromo = {
+      cabang: (data.promo?.cabang || []).filter(p => parseInt(p.branch_id) === parseInt(branchId)),
+      member: data.promo?.member || []
+    };
+
+    layananSelect.innerHTML = '<option value="">--- Pilih layanan ---</option>';
+    availableServices = data.services || [];
+
+    if (availableServices.length > 0) {
+      availableServices.forEach(service => {
+        const option = document.createElement('option');
+        option.value = service.serviceId;
+        option.text = service.name;
+        layananSelect.appendChild(option);
+      });
+    } else {
+      const option = document.createElement('option');
+      option.value = '';
+      option.text = 'Tidak ada layanan tersedia';
+      layananSelect.appendChild(option);
+    }
+
+    minQuantityInput.value = '';
+
+    if (manualSelect && navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+      fetch('/setting/branch/distance-to', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-CSRF-TOKEN': '{{ csrf_token() }}',
         },
         body: JSON.stringify({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
           branch_id: branchId
         })
       })
       .then(response => response.json())
-      .then(data => {
-        currentPromo = data.promo || { cabang: [], member: [] };
-        layananSelect.innerHTML = '<option value="">--- Pilih layanan ---</option>';
-        availableServices = data.services || [];
-
-        if (availableServices.length > 0) {
-          availableServices.forEach(service => {
-            const option = document.createElement('option');
-            option.value = service.serviceId;
-            option.text = service.name;
-            layananSelect.appendChild(option);
-          });
-        } else {
-          const option = document.createElement('option');
-          option.value = '';
-          option.text = 'Tidak ada layanan tersedia';
-          layananSelect.appendChild(option);
+      .then(locData => {
+        const distance = locData.distance_km;
+        for (let i = 0; i < cabangSelect.options.length; i++) {
+          const option = cabangSelect.options[i];
+          if (parseInt(option.value) === parseInt(branchId)) {
+            let cleanText = option.text.replace(/\s\(.+\)/, '');
+            option.text = `${cleanText} (${distance.toFixed(2)} km)`;
+          }
         }
+      });
+    });
+  }
 
-        minQuantityInput.value = '';
+
       })
       .catch(() => {
         const option = document.createElement('option');
@@ -296,80 +356,149 @@
 </script>
 
 <script>
-      let currentPromo = {
-        cabang: [],
-        member: []
-      };
+    document.addEventListener('DOMContentLoaded', function () {
+      const btnLanjut = document.getElementById('btnLanjut');
+      const layananSelect = document.getElementById('layanan');
+      const beratInput = document.getElementById('berat');
+      const form = document.getElementById('orderForm');
 
-  document.addEventListener('DOMContentLoaded', function () {
-    const btnLanjut = document.getElementById('btnLanjut');
-    const layananSelect = document.getElementById('layanan');
-    const beratInput = document.getElementById('berat');
-    const form = document.getElementById('orderForm');
-
-    const layananText = document.getElementById('previewLayanan');
-    const unitText = document.getElementById('previewUnit');
-    const hargaText = document.getElementById('previewHarga');
-    const beratText = document.getElementById('previewBerat');
-    const totalText = document.getElementById('previewTotal');
-    const promoList = document.querySelector('#promoList ul');
+      const layananText = document.getElementById('previewLayanan');
+      const unitText = document.getElementById('previewUnit');
+      const hargaText = document.getElementById('previewHarga');
+      const beratText = document.getElementById('previewBerat');
+      const totalText = document.getElementById('previewTotal');
+      const promoList = document.querySelector('#promoList ul');
 
 
-    btnLanjut.addEventListener('click', function () {
-      const selectedId = layananSelect.value;
-      const selectedService = availableServices.find(s => s.serviceId == selectedId);
+      btnLanjut.addEventListener('click', function () {
+  const selectedId = layananSelect.value;
+  const selectedService = availableServices.find(s => s.serviceId == selectedId);
 
-      if (!selectedService) return alert("Pilih layanan terlebih dahulu");
+  if (!selectedService) return alert("Pilih layanan terlebih dahulu");
 
-      const berat = parseFloat(beratInput.value);
-      const hargaPerUnit = parseFloat(selectedService.pricePerUnit);
-      const unit = selectedService.unitType;
+  const berat = parseFloat(beratInput.value);
+  if (isNaN(berat)) return alert("Isi estimasi berat/potongan dengan benar");
 
-      if (isNaN(berat)) return alert("Isi estimasi berat/potongan dengan benar");
+  const hargaPerUnit = parseFloat(selectedService.pricePerUnit);
+  const unit = selectedService.unitType;
+  const deliveryOption = document.getElementById('deliveryOption').value;
+  const ongkirText = document.getElementById('previewOngkir');
 
-      let total = hargaPerUnit * berat;
-      let totalDiskon = 0;
-      const promos = [...(currentPromo.cabang || []), ...(currentPromo.member || [])];
-      promoList.innerHTML = ''; 
-      promos.forEach(promo => {
-        const amount = parseFloat(promo.amountPromo);
-        let diskon = 0;
-        let promoText = `${promo.promoName} - `;  // Add promoName here
-        
-        if (promo.typePromo == 1) {
-            diskon = total * (amount / 100);
-            promoText += `Diskon ${amount}% (Rp${diskon.toLocaleString()})`;
-        } else {
-            diskon = amount;
-            promoText += `Diskon Rp${diskon.toLocaleString()}`;
-        }
-        
-        promoList.innerHTML += `<li>${promoText}</li>`;
-        totalDiskon += diskon;
-    });
+  let total = hargaPerUnit * berat;
+  let totalDiskon = 0;
+  let ongkir = 0;
+
+  const promos = [...(currentPromo.cabang || []), ...(currentPromo.member || [])];
+  promoList.innerHTML = ''; 
+    promos.forEach(promo => {
+    const amount = parseFloat(promo.amountPromo);
+    let diskon = 0;
+    let promoText = `${promo.promoName} - `;  
+
+    if (promo.typePromo == 1) {
+        diskon = total * (amount / 100);
+        promoText += `Diskon ${amount}% (Rp${diskon.toLocaleString()})`;
+    } else {
+        diskon = amount;  
+        promoText += `Diskon Rp${diskon.toLocaleString()}`;
+    }
+
+    promoList.innerHTML += `<li>${promoText}</li>`;
+    totalDiskon += diskon;
+  });
 
 
-      const finalTotal = Math.max(total - totalDiskon, 0)
+  const distance = parseFloat(cabangSelect.options[cabangSelect.selectedIndex].text.match(/\(([\d.]+) km\)/)?.[1] || 0);
+  const ongkirWrapper = document.getElementById('ongkirWrapper');
 
-      layananText.innerText = selectedService.name;
-      unitText.innerText = unit;
-      hargaText.innerText = `Rp${hargaPerUnit.toLocaleString()}`;
-      beratText.innerText = `${berat} ${unit}`;
-      totalText.innerText = `Rp${finalTotal.toLocaleString()} (Diskon: Rp${totalDiskon.toLocaleString()})`;
 
-      // isi hidden form
-      form.cabang.value = document.getElementById('cabang').value;
-      form.nama.value = document.getElementById('nama').value;
-      form.telepon.value = document.getElementById('telepon').value;
-      form.alamat.value = document.getElementById('alamat').value;
-      form.layanan.value = selectedId;
-      form.minQuantity.value = selectedService.minQuantity;
-      form.berat.value = beratInput.value;
-      form.catatan.value = document.getElementById('catatan').value;
+  if (deliveryOption === '1') {
+    if (distance > 1) {
+      ongkir = Math.ceil(distance - 1) * 5000;
+    } else {
+      ongkir = 0;
+    }
+    ongkirText.innerText = `Rp${ongkir.toLocaleString()} (${distance.toFixed(2)} km)`;
+    ongkirWrapper.style.display = 'block';
+  } else {
+    ongkir = 0;
+    ongkirText.innerText = '-'; 
+    ongkirWrapper.style.display = 'none';
+  }
 
-      const modal = new bootstrap.Modal(document.getElementById('modalEstimasi'));
-      modal.show();
-    });
+
+  const finalTotal = Math.max(total - totalDiskon, 0) + ongkir;
+
+  layananText.innerText = selectedService.name;
+  unitText.innerText = unit;
+  hargaText.innerText = `Rp${hargaPerUnit.toLocaleString()}`;
+  beratText.innerText = `${berat} ${unit}`;
+  totalText.innerText = `Rp${finalTotal.toLocaleString()} (Diskon: Rp${totalDiskon.toLocaleString()}, Ongkir: Rp${ongkir.toLocaleString()})`;
+
+  form.berat.value = beratInput.value;
+    form.catatan.value = document.getElementById('catatan').value;
+    form.deliveryOption.value = deliveryOption;
+    form.ongkir.value = ongkir;
+    document.getElementById('paymentMethod').addEventListener('change', function () {
+    form.paymentMethod.value = this.value;
+});
+
+  const modal = new bootstrap.Modal(document.getElementById('modalEstimasi'));
+  modal.show();
+});
+
+document.getElementById('deliveryOption').addEventListener('change', function () {
+  const deliveryOption = this.value;
+  const distance = parseFloat(cabangSelect.options[cabangSelect.selectedIndex].text.match(/\(([\d.]+) km\)/)?.[1] || 0);
+  const ongkirText = document.getElementById('previewOngkir');
+  const ongkirWrapper = ongkirText.closest('p');
+
+  let ongkir = 0;
+
+  if (deliveryOption === '1') {
+    if (distance > 1) {
+      ongkir = Math.ceil(distance - 1) * 5000;
+    }
+    ongkirText.innerText = `Rp${ongkir.toLocaleString()} (${distance.toFixed(2)} km)`;
+    ongkirWrapper.style.display = 'block';
+  } else {
+    ongkirText.innerText = '-';
+    ongkirWrapper.style.display = 'none';
+  }
+
+
+  document.querySelector('[name="ongkir"]').value = ongkir;
+  document.querySelector('[name="deliveryOption"]').value = deliveryOption;
+});
+form.addEventListener('submit', function (e) {
+   e.preventDefault();  // Prevent default form submission
+
+   const metode = document.getElementById('paymentMethod').value;
+   console.log("Payment Method Selected: " + metode);  // Debugging payment method value
+
+   if (!metode) {
+       alert('Metode pembayaran belum dipilih!');
+       return;
+   }
+
+   // Update form action based on payment method
+   if (metode === '1') {
+       form.action = "{{ url('/transactions/order/cash') }}";  // URL for cash payment
+   } else if (metode === '2') {
+       form.action = "{{ url('/transactions/order/saldo') }}";  // URL for saldo payment
+   } else {
+       alert('Metode pembayaran tidak dikenali!');
+       return;
+   }
+
+   console.log('Form action after setting: ', form.action);  // Check action before submitting
+
+   form.submit();  // Submit form after action is updated
+
+});
+
+
+
   });
 </script>
 @endpush
