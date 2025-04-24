@@ -55,11 +55,15 @@
                                         <label for="branch" class="form-label">Cabang *jika ingin promo berdasarkan cabang</label>
                                         <select name="branch_id" class="form-control" id="branch_id">
                                             <option value="">--- Pilih Cabang ---</option>
-                                            @foreach ($branch as $b)
-                                                <option value="{{ $b->branchId }}" {{ $b->branchId == $promo->branch_id ? 'selected' : '' }}>
-                                                    {{ $b->address }}
+                                            @if (Auth::user()->branch)
+                                                <option value="{{ Auth::user()->branch->branchId }}" selected>
+                                                    {{ Auth::user()->branch->address }}
                                                 </option>
-                                            @endforeach
+                                            @else
+                                                @foreach ($branch as $b)
+                                                    <option  value="{{ $b->branchId }}" {{ $b->branchId == $promo->branch_id ? 'selected' : '' }}>{{ $b->address }}</option>
+                                                @endforeach
+                                            @endif
                                         </select>                                  
                                     </div>
                                     

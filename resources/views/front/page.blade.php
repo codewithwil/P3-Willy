@@ -439,10 +439,11 @@
     form.catatan.value = document.getElementById('catatan').value;
     form.deliveryOption.value = deliveryOption;
     form.ongkir.value = ongkir;
-    document.getElementById('paymentMethod').addEventListener('change', function () {
-    form.paymentMethod.value = this.value;
-});
+    form.paymentMethod.value = document.getElementById('paymentMethod').value;
 
+    document.getElementById('paymentMethod').addEventListener('change', function () {
+      form.paymentMethod.value = this.value;
+    });
   const modal = new bootstrap.Modal(document.getElementById('modalEstimasi'));
   modal.show();
 });
@@ -481,9 +482,8 @@ form.addEventListener('submit', function (e) {
        return;
    }
 
-   // Update form action based on payment method
    if (metode === '1') {
-       form.action = "{{ url('/transactions/order/cash') }}";  // URL for cash payment
+       form.action = "{{ url('/transactions/order/cash') }}";
    } else if (metode === '2') {
        form.action = "{{ url('/transactions/order/saldo') }}";  // URL for saldo payment
    } else {

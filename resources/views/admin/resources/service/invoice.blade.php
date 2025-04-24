@@ -136,9 +136,9 @@
                                     <img src="{{ asset($company->image) }}" style="height: 100px; width:100px" alt="Logo" class="invoice-image shadow img-fluid rounded-circle">
                                     <div class="company-details">
                                         <p class="company-name" style="font-weight: bold;">{{ $company->name }}</p>
-                                        <p>Email: {{ $company->email }}</p>
-                                        <p>Phone: {{ $company->phone }}</p>
-                                        <p>Address: {{ $company->address }}</p>
+                                        <p>Email: {{ Auth::user()->branch->email ?? 'Cabang Utama'}}</p>
+                                        <p>Alamat: {{ Auth::user()->branch->address ?? 'Cabang Utama'}}</p>
+                                        <p>Nomor telepon: {{ Auth::user()->branch->address ?? 'Cabang Utama'}}</p>
                                     </div>
                                 </div>
                             
@@ -158,7 +158,6 @@
                                         <th>Satuan</th>
                                         <th>Jumlah minimal</th>
                                         <th>Deksripsi</th>
-                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>

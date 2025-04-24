@@ -19,8 +19,7 @@
     <div class="container-fluid">
         <div class="row">
             <form class="row g-3" action="{{ url('people/employee/update/'.$users->employeeId) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-             
+                @csrf  
                 <div class="card mb-4" style="border-left: 5px solid #007bff;">
                     <div class="card-header bg-primary text-white">
                         <h5 class="mb-0">Akun Petugas</h5>
@@ -58,11 +57,15 @@
                                     <label for="branch" class="form-label">Cabang</label>
                                     <select name="branch_id" class="form-control" id="branch">
                                         <option value="">--- Pilih Cabang ---</option>
-                                        @foreach ($branch as $b)
-                                            <option value="{{ $b->branchId }}" {{ $b->branchId == $users->user->branch_id ? 'selected' : '' }}>
-                                                {{ $b->address }}
+                                        @if (Auth::user()->branch)
+                                            <option value="{{ Auth::user()->branch->branchId }}" selected>
+                                                {{ Auth::user()->branch->address }}
                                             </option>
-                                        @endforeach
+                                        @else
+                                            @foreach ($branch as $b)
+                                                <option  value="{{ $b->branchId }}" {{ $b->branchId == $promo->branch_id ? 'selected' : '' }}>{{ $b->address }}</option>
+                                            @endforeach
+                                        @endif
                                         </select>
                                 </div>              
                             </div>

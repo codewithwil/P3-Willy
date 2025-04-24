@@ -28,11 +28,8 @@
                 <div class="card mb-4">
                     <div class="card-header"><h3 class="card-title">Pemesanan Jasa Loundry</h3></div>
                     <div class="col-12 d-flex">
-                        @if(auth()->user()->hasRole(['admin', 'supervisor']))
-                        <a href="{{ url('setting/service/create') }}" class="btn btn-primary ms-3 mt-3">
-                            Tambah
-                        </a>
-                        <a href="{{ url('setting/service/invoice') }}" class="btn btn-warning ms-3 mt-3">
+                        @if(auth()->user()->hasRole(['admin', 'supervisor', 'petugas']))
+                        <a href="{{ url('transactions/order/invoice') }}" class="btn btn-warning ms-3 mt-3">
                             Invoice
                         </a>
                         @endif
@@ -42,6 +39,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Tanggal Pesan</th>
                                     <th>Cabang</th>
                                     <th>Nama Pemesan</th>
                                     <th>Jasa yang dipesan</th>
@@ -50,6 +48,7 @@
                                     <th>Jenis Pengantaran</th>
                                     <th>Ongkir</th>
                                     <th>Total</th>
+                                    <th>Status Order</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -57,6 +56,7 @@
                                 @foreach ($order as $s)
                                 <tr>
                                     <td>{{ $loop->iteration  }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($s->created_at)->format('d/m/Y')}}</td>
                                     <td>{{ $s->branch->address  }}</td>
                                     <td>{{ $s->customer->name  }}</td>
                                     <td>{{ $s->service->name  }}</td>
@@ -65,14 +65,21 @@
                                     <td>{{ $s->deliverOp_label  }}</td>
                                     <td>{{ $s->postage  }}</td>
                                     <td>{{ $s->total  }}</td>
+                                    <td>{{ $s->status_label  }}</td>
                                     <td>
                                         @if(auth()->user()->hasRole(['admin', 'supervisor', 'petugas']))
-                                            <a href="{{ url('/setting/service/edit/' . $s->serviceId) }}" 
-                                                class="btn btn-primary">
-                                                Detail
-                                            </a>                                   
+                                            <div class="d-flex gap-2">
+                                                <a href="{{ url('/transactions/order/edit/' . $s->serviceTransId) }}" 
+                                                    class="btn btn-primary">
+                                                    Edit
+                                                </a>     
+                                                <a href="{{ url('/transactions/order/details/' . $s->serviceTransId) }}" 
+                                                    class="btn btn-secondary">
+                                                    Detail
+                                                </a>                                
+                                            </div>
                                         @endif
-                                    </td>
+                                    </td>                                    
                                 </tr>
                                 @endforeach
                             </tbody>

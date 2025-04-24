@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('customer_id');
             $table->decimal('weight', 6, 2);
             $table->text('note');
-            $table->tinyInteger('paymentMethod');
+            $table->tinyInteger('paymentMethod')->default(1);
             $table->tinyInteger('deliverOption');
             $table->decimal('postage', 12, 2);
             $table->decimal('total', 12, 2);

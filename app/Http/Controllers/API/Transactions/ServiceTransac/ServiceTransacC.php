@@ -7,6 +7,7 @@ use App\{
 };
 use App\Models\People\Customers\Customers;
 use App\Models\Resources\Branch\Branch;
+use App\Models\Resources\Company\Company;
 use App\Models\Resources\Service\Service;
 use App\Models\Transactions\Saldo\SaldoHistories;
 use Illuminate\Http\Request;
@@ -21,6 +22,13 @@ class ServiceTransacC extends Controller
         $order = ServiceTransac::with(['branch', 'service', 'customer'])->get();
         return view('admin.transactions.order.index', compact('order'));
     }
+
+ 
+    public function invoice(){
+        $order    = ServiceTransac::get();
+        $company = Company::first();
+        return view('admin.transactions.order.invoice', compact('order', 'company'));
+    }
     
     public function byId($customerId)
     {
@@ -29,6 +37,34 @@ class ServiceTransacC extends Controller
         return view('front.order.me', compact('orders'));
     }
     
+    public function edit($serviceTransId){
+        $order = ServiceTransac::findOrFail($serviceTransId);
+        return view('admin.transactions.order.update', compact('order'));
+    }
+        
+    public function details($serviceTransId){
+        $order = ServiceTransac::findOrFail($serviceTransId);
+        return view('admin.transactions.order.details', compact('order'));
+    }
+
+    public function update($serviceTransId, Request $req){
+        $req->validate([
+            'status'     => 'nullable',
+        ]);
+        DB::beginTransaction(); 
+        try {
+            $service          = ServiceTransac::findOrFail($serviceTransId);
+            $service->status  = $req->status;
+            $service->save();
+    
+            DB::commit(); 
+    
+            return redirect('/transactions/order/')->with('success', 'Data Pemesanan Jasa berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack(); 
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
 
     public function cash(Request $req)
     {
@@ -69,11 +105,9 @@ class ServiceTransacC extends Controller
             foreach ($promos as $promo) {
                 $discount = $this->applyPromo($promo, $total);
                 $totalDiscount += $discount;
-                \Log::info('Applied Promo:', ['Promo ID' => $promo->promoId, 'Discount' => $discount]);
             }
     
             $finalTotal = max($total - $totalDiscount, 0);
-            \Log::info('Final Total After Discount:', [$finalTotal]);
     
             $order = ServiceTransac::create([
                 'customer_id'   => $req->customerId,
@@ -84,7 +118,7 @@ class ServiceTransacC extends Controller
                 'deliverOption' => $req->deliveryOption,
                 'postage'       => $ongkir,
                 'total'         => $finalTotal,  
-                'paymentMethod' => $req->paymentMethod,
+                'paymentMethod' => 1,
                 'status'        => ServiceTransac::STATUS_PENDING,
             ]);
     
@@ -139,14 +173,9 @@ class ServiceTransacC extends Controller
             foreach ($promos as $promo) {
                 $discount = $this->applyPromo($promo, $total);
                 $totalDiscount += $discount;
-                \Log::info('Applied Promo:', ['Promo ID' => $promo->promoId, 'Discount' => $discount]);
             }
-            
-            \Log::info('Total Discount Applied: ', [$totalDiscount]);
     
             $finalTotal = max($total - $totalDiscount, 0);
-    
-            \log::info('Final Total: ', [$finalTotal]);
     
             if ($customer->saldo < $finalTotal) {
                 return redirect()->back()->with('error', 'Saldo Anda tidak cukup untuk melakukan transaksi!');
@@ -177,7 +206,7 @@ class ServiceTransacC extends Controller
     
             DB::commit();
     
-            return redirect('/order')->with('success', "Order $order->serviceTransId berhasil ditambahkan!");
+            return redirect('/order')->with('success', "Order berhasil ditambahkan!");
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
@@ -186,9 +215,6 @@ class ServiceTransacC extends Controller
     private function getApplicablePromos($branch, $customer)
     {
         $promos = [];
-    
-        \Log::info('Branch Promo:', [$branch->promo ?? 'No promo']);
-        \Log::info('Customer Promo:', [$customer->promo ?? 'No promo']);
     
         if ($branch && $branch->promo) {
             foreach ($branch->promo as $promo) {
@@ -209,7 +235,6 @@ class ServiceTransacC extends Controller
     private function applyPromo($promo, $total)
     {
         if (!$promo || !isset($promo->typePromo) || !isset($promo->amountPromo)) {
-            \Log::warning('Invalid promo data or missing fields', [$promo]);
             return 0;
         }
     
@@ -217,12 +242,10 @@ class ServiceTransacC extends Controller
     
         if ($promo->typePromo == 1) {
             $discount = $total * ($amountPromo / 100);
-            \Log::info('Applying percentage promo:', ['Discount' => $discount]);
             return $discount;
         }
     
         $discount = $amountPromo;
-        \Log::info('Applying fixed amount promo:', ['Discount' => $discount]);
         return $discount;
     }
     

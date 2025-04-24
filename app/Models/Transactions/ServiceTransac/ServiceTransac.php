@@ -2,10 +2,13 @@
 
 namespace App\Models\Transactions\ServiceTransac;
 
-use App\Models\People\Customers\Customers;
-use App\Models\Resources\Branch\Branch;
-use App\Models\Resources\Service\Service;
-use App\Models\User;
+use App\{
+    Models\People\Customers\Customers,
+    Models\Resources\Branch\Branch,
+    Models\Resources\Service\Service,
+    Models\User,
+};
+
 use Illuminate\Database\Eloquent\Model;
 
 class ServiceTransac extends Model
@@ -19,7 +22,7 @@ class ServiceTransac extends Model
     const DO_DELIVER        = 1;
     const DO_DROPOFF        = 2;
     const PAYM_CASH         = 1;
-    const PAYM_SALDO           = 2;
+    const PAYM_SALDO        = 2;
     protected $table        = 'service_transacs';
     protected $primaryKey   = 'serviceTransId';
     protected $fillable     = [

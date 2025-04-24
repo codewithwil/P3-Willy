@@ -59,7 +59,6 @@ use HasFactory, Notifiable, HasRoles;
     }
 
     public function branch(){return $this->belongsTo(Branch::class, 'branch_id', 'branchId');}
-
     public function admin()
     {
         return $this->hasOne(Admin::class, 'user_id');

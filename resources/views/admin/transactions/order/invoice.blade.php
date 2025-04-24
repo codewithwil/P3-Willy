@@ -1,5 +1,5 @@
 @extends('admin.template.template')
-@section('title', 'Invoice Users')
+@section('title', 'Invoice Pemesanan Jasa')
 
 @section('content')
 @push('css')
@@ -111,12 +111,12 @@
 <div class="app-content-header">
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-6"><h3 class="mb-0">Invoice Petugas</h3></div>
+            <div class="col-sm-6"><h3 class="mb-0">Invoice Pemesanan Jasa</h3></div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                     <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-                    <li class="breadcrumb-item">Konfigurasi</li>
-                    <li class="breadcrumb-item active" aria-current="page">Users</li>
+                    <li class="breadcrumb-item">Setting</li>
+                    <li class="breadcrumb-item active" aria-current="page">Shift</li>
                 </ol>
             </div>
         </div>
@@ -148,37 +148,36 @@
                                 </div>
                             </div>
 
-                            <table id="dataTableUser" class="table table-striped" style="width:100%">
+                            <table id="dataTableUnit" class="table table-striped" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Foto</th>
-                                        <th>Nama</th>
-                                        <th>Email</th>
-                                        <th>Nomor Telepon</th>
-                                        <th>Alamat</th>
-                                        <th>Jenis Kelamin</th>
+                                        <th>Tanggal Pesan</th>
+                                        <th>Cabang</th>
+                                        <th>Nama Pemesan</th>
+                                        <th>Jasa yang dipesan</th>
+                                        <th>Satuan Atau Berat</th>
+                                        <th>Catatan</th>
+                                        <th>Jenis Pengantaran</th>
+                                        <th>Ongkir</th>
+                                        <th>Total</th>
+                                        <th>Status Order</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($users as $us)
+                                    @foreach ($order as $s)
                                     <tr>
                                         <td>{{ $loop->iteration  }}</td>
-                                        <td>
-                                            @if($us->foto)
-                                            <img src="{{ asset('storage/' . $us->foto) }}" alt="Foto" 
-                                            class="rounded-circle" 
-                                            style="width: 100px; height: 100px; object-fit: cover;">
-                                       
-                                            @else
-                                                <span class="text-muted">Tidak ada foto</span>
-                                            @endif
-                                        </td>                                    
-                                        <td>{{ $us->name  }}</td>
-                                        <td>{{ $us->user->email }}</td>
-                                        <td>{{ $us->telepon ?? 'phone not set' }}</td>
-                                        <td>{{ $us->address ?? 'address not set' }}</td>
-                                        <td>{{ $us->gender_label }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($s->created_at)->format('d/m/Y')}}</td>
+                                        <td>{{ $s->branch->address  }}</td>
+                                        <td>{{ $s->customer->name  }}</td>
+                                        <td>{{ $s->service->name  }}</td>
+                                        <td>{{ $s->weight  }}</td>
+                                        <td>{{ $s->note  }}</td>
+                                        <td>{{ $s->deliverOp_label  }}</td>
+                                        <td>{{ $s->postage  }}</td>
+                                        <td>{{ $s->total  }}</td>
+                                        <td>{{ $s->status_label  }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -198,7 +197,7 @@
     <script src="https://cdn.datatables.net/2.2.1/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.2.1/js/dataTables.bootstrap5.js"></script>
     <script>
-        new DataTable('#dataTableUser');
+        new DataTable('#dataTableUnit');
         
         function printInvoice() {
             var content = document.getElementById('printableArea').innerHTML;
